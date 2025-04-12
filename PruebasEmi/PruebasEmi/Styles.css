@@ -1,0 +1,96 @@
+body {
+    background: linear-gradient(to right, #0074D9, #2ECC40);
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    color: #fff;
+    display: flex;
+    justify-content:left; /* Alinea hacia la izquierda */
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 20px;
+}
+
+.content-left {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.content-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.box {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.box h2 {
+    margin-top: 0;
+}
+
+header {
+    padding: 20px;
+    background-color: #00509E;
+    text-align: center;
+    border-radius: 10px;
+}
+
+header ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+    margin: 0;
+}
+
+header ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+header a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #004080;
+    border-radius: 10px;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-form input {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    flex: 1;
+}
+
+.search-form button {
+    background-color: #2ECC40;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+}

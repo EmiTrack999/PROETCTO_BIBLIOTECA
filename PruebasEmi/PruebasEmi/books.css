@@ -1,0 +1,111 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .main-header {
+    background-color: #333;
+    padding: 10px 0;
+  }
+  
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .navbar li a {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    padding: 10px 20px;
+    font-size: 18px;
+  }
+  
+  .navbar li a:hover {
+    background-color: #575b73;
+    border-radius: 5px;
+  }
+  
+  .boton-vender {
+    background-color: #e76f51;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 18px;
+  }
+  
+  .oferta-destacada a {
+    background-color: #f4a261;
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 8px;
+  }
+  
+  .oferta-destacada a:hover {
+    background-color: #e9c46a;
+  }
+  
+  main {
+    padding: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .motivacion {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .motivacion h1 {
+    font-size: 36px;
+    color: #2d2d2d;
+  }
+  
+  .motivacion p {
+    font-size: 24px;
+    color: #555;
+    font-weight: 400;
+    margin-top: 10px;
+  }
+  
+  .seccion-libros {
+    display: none;
+  }
+  
+  h2 {
+    color: #333;
+    font-size: 28px;
+    margin-top: 40px;
+  }
+  
+  .book-list {
+    list-style: square;
+    padding-left: 20px;
+    font-size: 20px;
+  }
+  
+  .book-list li {
+    margin-bottom: 10px;
+  }
+  
+  .main-footer {
+    text-align: center;
+    padding: 15px 0;
+    background-color: #333;
+    color: #ffffff;
+  }
+  

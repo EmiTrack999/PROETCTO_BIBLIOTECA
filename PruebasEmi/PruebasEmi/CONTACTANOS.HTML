@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contáctanos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #007BFF; /* Azul */
+        }
+        body {
+            background: linear-gradient(to right, #007BFF, #28a745); /* Fondo difuminado azul y verde */
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="email"], input[type="tel"], textarea {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            padding: 10px 15px;
+            background-color: #28a745; /* Verde */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type="submit"]:hover {
+            background-color: #218838; /* Verde más oscuro */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contáctanos</h1>
+        <form action="#" method="post">
+            <label for="email">Correo Electrónico:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="tel">Teléfono:</label>
+            <input type="tel" id="tel" name="tel" required>
+            
+            <input type="submit" value="Enviar">
+        </form>
+    </div>
+</body>
+</html>
