@@ -10,7 +10,26 @@
             background: linear-gradient(to right, #00f, #0f0);
             color: #fff;
             text-align: center;
-            padding: 50px;
+            padding: 0;
+            margin: 0;
+        }
+        /* Barra de navegación */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .navbar a:hover {
+            color: #0f0;
         }
         .container {
             background: rgba(255, 255, 255, 0.8);
@@ -18,7 +37,7 @@
             padding: 20px;
             border-radius: 10px;
             max-width: 600px;
-            margin: auto;
+            margin: 50px auto; /* Deja espacio para la barra */
         }
         h1 {
             color: #00f;
@@ -50,6 +69,12 @@
     </style>
 </head>
 <body>
+
+    <!-- Barra de navegación -->
+    <div class="navbar">
+        <a href="/primerahoja">Volver al Inicio</a>
+    </div>
+
     <div class="container">
         <h1>Atención al Cliente</h1>
         <p>Estamos aquí para ayudarte. Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos.</p>
@@ -66,5 +91,6 @@
             <button type="submit" class="button">Enviar</button>
         </form>
     </div>
+
 </body>
 </html>

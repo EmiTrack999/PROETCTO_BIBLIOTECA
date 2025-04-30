@@ -156,3 +156,24 @@ app.get("/vender", (req, res) => {
 app.listen(4000, () => {
     console.log("Escuchando en http://localhost:4000");
 });
+
+app.get('/comprar', (req, res) => {
+    // Aquí debes consultar los libros desde la base de datos
+    connection.query('SELECT * FROM libros', (error, results) => {
+        if (error) throw error;
+        res.render('comprar', { libros: results });
+    });
+});
+
+app.post('/comprar', (req, res) => {
+    const { libro_id, nombre_comprador, correo, direccion } = req.body;
+    connection.query(
+        'INSERT INTO compras (libro_id, nombre_comprador, correo, direccion) VALUES (?, ?, ?, ?)',
+        [libro_id, nombre_comprador, correo, direccion],
+        (error, results) => {
+            if (error) throw error;
+            res.send('Compra realizada con éxito.');
+        }
+    );
+});
+

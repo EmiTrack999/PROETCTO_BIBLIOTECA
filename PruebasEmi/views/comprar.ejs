@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Comprar Libro - Verso y Papel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #83a4d4, #b6fbff);
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #004080;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        th {
+            background-color: #004080;
+            color: white;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #008000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #005700;
+        }
+    </style>
+</head>
+<body>
+    <h1>Comprar un Libro</h1>
+
+    <h2>Libros Disponibles</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>Editorial</th>
+                <th>Año</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% libros.forEach(libro => { %>
+                <tr>
+                    <td><%= libro.id %></td>
+                    <td><%= libro.titulo %></td>
+                    <td><%= libro.autor %></td>
+                    <td><%= libro.editorial %></td>
+                    <td><%= libro.anio %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <form action="/comprar" method="POST">
+        <label for="libro_id">ID del Libro a Comprar:</label>
+        <input type="number" name="libro_id" id="libro_id" required>
+
+        <label for="nombre_comprador">Tu Nombre:</label>
+        <input type="text" name="nombre_comprador" id="nombre_comprador" required>
+
+        <label for="correo">Correo Electrónico:</label>
+        <input type="email" name="correo" id="correo" required>
+
+        <label for="direccion">Dirección de Envío:</label>
+        <input type="text" name="direccion" id="direccion" required>
+
+        <button type="submit">Confirmar Compra</button>
+    </form>
+</body>
+</html>

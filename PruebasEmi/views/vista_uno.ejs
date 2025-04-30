@@ -46,6 +46,20 @@
         .login-container button:hover {
             background-color: #005700;
         }
+
+        .volver-btn {
+            margin-top: 10px;
+            display: inline-block;
+            background-color: #004080;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .volver-btn:hover {
+            background-color: #002d5a;
+        }
     </style>
 </head>
 <body>
@@ -55,11 +69,11 @@
             <input type="text" name="usuario" placeholder="Usuario" required>
             <input type="password" name="contrasena" placeholder="Contraseña" required>
             <button type="submit">Registrar</button>
-             <!-- Mostrar el mensaje en la misma página -->
-    <% if (mensaje) { %>
-        <p style="color: red;"><strong><%= mensaje %></strong></p>
-    <% } %>
+            <% if (mensaje) { %>
+                <p style="color: red;"><strong><%= mensaje %></strong></p>
+            <% } %>
         </form>
+        <a href="/login" class="volver-btn">Volver</a>
     </div>
 </body>
 </html>

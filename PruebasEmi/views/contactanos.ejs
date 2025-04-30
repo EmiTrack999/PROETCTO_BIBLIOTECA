@@ -7,10 +7,28 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background: linear-gradient(to right, #007BFF, #28a745); /* Fondo difuminado azul y verde */
             margin: 0;
             padding: 0;
         }
+
+        /* Barra de navegación */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 15px 20px;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            color: #28a745;
+        }
+
         .container {
             max-width: 600px;
             margin: 50px auto;
@@ -19,52 +37,63 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
+
         h1 {
             text-align: center;
-            color: #007BFF; /* Azul */
+            color: #007BFF;
         }
-        body {
-            background: linear-gradient(to right, #007BFF, #28a745); /* Fondo difuminado azul y verde */
-        }
+
         form {
             display: flex;
             flex-direction: column;
         }
+
         label {
             margin-bottom: 5px;
             color: #333;
         }
-        input[type="email"], input[type="tel"], textarea {
+
+        input[type="email"],
+        input[type="tel"],
+        textarea {
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
         }
+
         input[type="submit"] {
             padding: 10px 15px;
-            background-color: #28a745; /* Verde */
+            background-color: #28a745;
             color: #fff;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
         }
+
         input[type="submit"]:hover {
-            background-color: #218838; /* Verde más oscuro */
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
+
+    <!-- Barra de navegación -->
+    <div class="navbar">
+        <a href="/primerahoja">Volver al Inicio</a>
+    </div>
+
     <div class="container">
         <h1>Contáctanos</h1>
         <form action="#" method="post">
             <label for="email">Correo Electrónico:</label>
             <input type="email" id="email" name="email" required>
-            
+
             <label for="tel">Teléfono:</label>
             <input type="tel" id="tel" name="tel" required>
-            
+
             <input type="submit" value="Enviar">
         </form>
     </div>

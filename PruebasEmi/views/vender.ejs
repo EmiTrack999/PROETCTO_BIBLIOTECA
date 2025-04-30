@@ -1,218 +1,137 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vender Libro</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #00f260, #0575e6);
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 50%;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 50px;
-        }
-        h1, h2 {
-            text-align: center;
-            color: #0575e6;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            margin-top: 10px;
-            font-weight: bold;
-            color: #0575e6;
-        }
-        input, textarea {
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #0575e6;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #00f260;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-        }
-        th {
-            background-color: #0575e6;
-            color: white;
-        }
-        .crud-buttons button {
-            background-color: #ff6666;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 5px;
-            margin: 2px;
-            cursor: pointer;
-        }
-        .crud-buttons button.edit {
-            background-color: #00cc66;
-        }
-        .crud-buttons button:hover {
-            opacity: 0.8;
-        }
-        #bookDetails {
-            margin-top: 30px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        #bookDetails p {
-            margin: 5px 0;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Comprar Libros</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 90%;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      text-align: center;
+      color: #d35400;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #d35400;
+      color: white;
+    }
+    .buy-button {
+      padding: 5px 10px;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .buy-button:hover {
+      background-color: #1e8449;
+    }
+    form {
+      margin-top: 30px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+    input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 100%;
+    }
+    button[type="submit"] {
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button[type="submit"]:hover {
+      background-color: #21618c;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Vender Libro</h1>
-        <form id="bookForm">
-            <label for="id">ID del Libro:</label>
-            <input type="text" id="id" name="id" required>
+  <div class="container">
+    <h1>Comprar Libros</h1>
+    <table id="bookTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Título</th>
+          <th>Autor</th>
+          <th>Editorial</th>
+          <th>Precio</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Libros simulados; en producción esto vendría desde tu base de datos -->
+        <tr>
+          <td>1</td>
+          <td>Cien Años de Soledad</td>
+          <td>Gabriel García Márquez</td>
+          <td>Sudamericana</td>
+          <td>$250</td>
+          <td><button class="buy-button" onclick="comprarLibro(this)">Comprar</button></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>El Principito</td>
+          <td>Antoine de Saint-Exupéry</td>
+          <td>Gallimard</td>
+          <td>$180</td>
+          <td><button class="buy-button" onclick="comprarLibro(this)">Comprar</button></td>
+        </tr>
+      </tbody>
+    </table>
 
-            <label for="titulo">Título del Libro:</label>
-            <input type="text" id="titulo" name="titulo" required>
+    <form id="purchaseForm" action="/comprar" method="POST">
+      <h2>Detalles de la Compra</h2>
+      <input type="hidden" name="libro_id" id="libro_id" />
+      <label for="nombre">Nombre Completo:</label>
+      <input type="text" name="nombre" required />
 
-            <label for="autor">Autor:</label>
-            <input type="text" id="autor" name="autor" required>
+      <label for="correo">Correo Electrónico:</label>
+      <input type="email" name="correo" required />
 
-            <label for="editorial">Editorial:</label>
-            <input type="text" id="editorial" name="editorial" required>
+      <label for="direccion">Dirección de Envío:</label>
+      <input type="text" name="direccion" required />
 
-            <label for="anio">Año de Publicación:</label>
-            <input type="number" id="anio" name="anio" required>
+      <button type="submit">Finalizar Compra</button>
+    </form>
+  </div>
 
-            <label for="descripcion">Descripción:</label>
-            <textarea id="descripcion" name="descripcion" rows="4" required></textarea>
-
-            <button type="submit">Enviar</button>
-        </form>
-    </div>
-
-    <div class="container">
-        <h2>Gestión de Libros Publicados</h2>
-        <table id="bookTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Autor</th>
-                    <th>Editorial</th>
-                    <th>Año</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Libros agregados dinámicamente -->
-            </tbody>
-        </table>
-    </div>
-
-    <div class="container" id="bookDetails">
-        <h2>Detalles del Libro</h2>
-        <p id="detailId">ID: </p>
-        <p id="detailTitulo">Título: </p>
-        <p id="detailAutor">Autor: </p>
-        <p id="detailEditorial">Editorial: </p>
-        <p id="detailAnio">Año: </p>
-    </div>
-
-    <script>
-        document.getElementById("bookForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-
-            const id = document.getElementById("id").value;
-            const titulo = document.getElementById("titulo").value;
-            const autor = document.getElementById("autor").value;
-            const editorial = document.getElementById("editorial").value;
-            const anio = document.getElementById("anio").value;
-
-            const table = document.querySelector("#bookTable tbody");
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${id}</td>
-                <td>${titulo}</td>
-                <td>${autor}</td>
-                <td>${editorial}</td>
-                <td>${anio}</td>
-                <td class="crud-buttons">
-                    <button class="edit">Editar</button>
-                    <button class="delete">Eliminar</button>
-                    <button class="view">Ver</button>
-                </td>
-            `;
-            table.appendChild(row);
-
-            document.getElementById("bookForm").reset();
-
-            addCrudFunctionality(row);
-        });
-
-        function addCrudFunctionality(row) {
-            const editButton = row.querySelector(".edit");
-            const viewButton = row.querySelector(".view");
-            const deleteButton = row.querySelector(".delete");
-
-            editButton.addEventListener("click", function() {
-                const cells = row.querySelectorAll("td");
-                cells[1].innerHTML = `<input type="text" value="${cells[1].innerText}" />`;
-                cells[2].innerHTML = `<input type="text" value="${cells[2].innerText}" />`;
-                cells[3].innerHTML = `<input type="text" value="${cells[3].innerText}" />`;
-                cells[4].innerHTML = `<input type="number" value="${cells[4].innerText}" />`;
-                editButton.innerText = "Guardar";
-
-                editButton.addEventListener("click", function saveChanges() {
-                    cells[1].innerText = cells[1].querySelector("input").value;
-                    cells[2].innerText = cells[2].querySelector("input").value;
-                    cells[3].innerText = cells[3].querySelector("input").value;
-                    cells[4].innerText = cells[4].querySelector("input").value;
-                    editButton.innerText = "Editar";
-                }, { once: true });
-            });
-
-            viewButton.addEventListener("click", function() {
-                const cells = row.querySelectorAll("td");
-                document.getElementById("detailId").innerText = "ID: " + cells[0].innerText;
-                document.getElementById("detailTitulo").innerText = "Título: " + cells[1].innerText;
-                document.getElementById("detailAutor").innerText = "Autor: " + cells[2].innerText;
-                document.getElementById("detailEditorial").innerText = "Editorial: " + cells[3].innerText;
-                document.getElementById("detailAnio").innerText = "Año: " + cells[4].innerText;
-            });
-
-            deleteButton.addEventListener("click", function() {
-                if (confirm("¿Estás seguro de que quieres eliminar este libro?")) {
-                    row.remove();
-                }
-            });
-        }
-    </script>
+  <script>
+    function comprarLibro(button) {
+      const row = button.closest("tr");
+      const libroId = row.children[0].innerText;
+      document.getElementById("libro_id").value = libroId;
+      document.getElementById("purchaseForm").style.display = "flex";
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+  </script>
 </body>
 </html>
