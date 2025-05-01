@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrito de Compras - Verso y Papel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #FFB74D, #FFECB3); /* Naranja desvanecido */
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #FF6F00; /* Naranja más oscuro */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        th {
+            background-color: #FF6F00; /* Naranja más oscuro */
+            color: white;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #FF6F00; /* Naranja más oscuro */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #E65100; /* Un tono más oscuro de naranja */
+        }
+
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+            color: #FF6F00; /* Naranja más oscuro */
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #FF6F00; /* Naranja más oscuro */
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Carrito de Compras</h1>
+
+    <h2>Libros en tu Carrito</h2>
+
+    <!-- Si el carrito está vacío, mostrar un mensaje -->
+    <% if (libros.length === 0) { %>
+        <p class="empty-cart">Tu carrito está vacío. Agrega libros para comprarlos.</p>
+    <% } else { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% let totalCompra = 0; %>
+                <% libros.forEach(libro => { %>
+                    <tr>
+                        <td><%= libro.titulo %></td>
+                        <td><%= libro.autor %></td>
+                        <td>
+                            <form action="/actualizar-cantidad" method="POST" style="display:inline;">
+                                <input type="hidden" name="libro_id" value="<%= libro.id %>">
+                                <input type="number" name="cantidad" value="<%= libro.cantidad %>" min="1" style="width: 50px;">
+                                <button type="submit">Actualizar</button>
+                            </form>
+                        </td>
+                        <td><%= libro.precio %> €</td>
+                        <td><%= libro.cantidad * libro.precio %> €</td>
+                    </tr>
+                    <% totalCompra += libro.cantidad * libro.precio; %>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <!-- Mostrar el total -->
+        <div class="total">
+            Total: <%= totalCompra %> €
+        </div>
+    <% } %>
+
+    <!-- Formulario para completar la compra -->
+    <form action="/comprar" method="POST">
+        <h2>Detalles de Envío</h2>
+
+        <label for="nombre_comprador">Tu Nombre:</label>
+        <input type="text" name="nombre_comprador" id="nombre_comprador" required>
+
+        <label for="correo">Correo Electrónico:</label>
+        <input type="email" name="correo" id="correo" required>
+
+        <label for="direccion">Dirección de Envío:</label>
+        <input type="text" name="direccion" id="direccion" required>
+
+        <button type="submit">Confirmar Compra</button>
+    </form>
+</body>
+</html>

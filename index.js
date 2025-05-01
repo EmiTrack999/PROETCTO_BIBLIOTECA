@@ -4,9 +4,8 @@ const mysql = require('mysql');
 
 const app = express();
 app.use(express.static(path.join(__dirname, 'PruebasEmi', 'views')));
-app.use(express.urlencoded({ extended: true })); // Para leer datos de formularios
+app.use(express.urlencoded({ extended: true }));
 
-// Configuración de conexión a la base de datos
 const conexion = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -22,30 +21,24 @@ conexion.connect((error) => {
     }
 });
 
-// Configuración del motor de plantillas EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'PruebasEmi', 'views'));
 
-// Rutas principales
 app.get("/", (req, res) => {
     res.render("inicio_sesion", { mensaje: "" });
 });
 
-// Ruta para la vista de registro (redirigir a esta página)
 app.get("/registrar", (req, res) => {
     res.render("vista_uno", { mensaje: "" });
 });
 
-// Ruta para registrar un nuevo usuario
 app.post("/registrar", (req, res) => {
     const { usuario, contrasena } = req.body;
 
     if (!usuario || !contrasena) {
-        // Si faltan datos, muestra un mensaje en la página sin redirigir
         return res.render("vista_uno", { mensaje: "Faltan datos." });
     }
 
-    // Verificar si el usuario ya existe
     const verificarUsuario = "SELECT * FROM usuarios WHERE usuario = ?";
     conexion.query(verificarUsuario, [usuario], (err, resultado) => {
         if (err) {
@@ -54,12 +47,10 @@ app.post("/registrar", (req, res) => {
         }
 
         if (resultado.length > 0) {
-            // Si el usuario ya existe, muestra el mensaje de error en la misma página
             console.log("El usuario ya está registrado.");
             return res.render("vista_uno", { mensaje: "El usuario ya está registrado, por favor inicie sesión." });
         }
 
-        // Si el usuario no existe, se procede a registrar
         const sql = "INSERT INTO usuarios (usuario, contrasena) VALUES (?, ?)";
         conexion.query(sql, [usuario, contrasena], (err, resultado) => {
             if (err) {
@@ -67,19 +58,15 @@ app.post("/registrar", (req, res) => {
                 return res.render("vista_uno", { mensaje: "Error al registrar usuario." });
             }
             console.log("Usuario registrado correctamente.");
-
-            // Redirige a la siguiente página con el mensaje de bienvenida
             return res.redirect("/primerahoja?mensaje=Bienvenido, usuario registrado con éxito!");
         });
     });
 });
 
-// Ruta para la página de inicio de sesión (para comprobar si el usuario está registrado)
 app.get("/login", (req, res) => {
     res.render("inicio_sesion", { mensaje: "" });
 });
 
-// Ruta para manejar el inicio de sesión
 app.post("/login", (req, res) => {
     const { usuario, contrasena } = req.body;
 
@@ -87,7 +74,6 @@ app.post("/login", (req, res) => {
         return res.render("inicio_sesion", { mensaje: "Por favor ingrese su usuario y contraseña." });
     }
 
-    // Verificar si el usuario existe y si la contraseña es correcta
     const verificarUsuario = "SELECT * FROM usuarios WHERE usuario = ? AND contrasena = ?";
     conexion.query(verificarUsuario, [usuario, contrasena], (err, resultado) => {
         if (err) {
@@ -96,84 +82,90 @@ app.post("/login", (req, res) => {
         }
 
         if (resultado.length === 0) {
-            // Si el usuario no existe en la base de datos
             console.log("El usuario no está registrado.");
-            return res.render("inicio_sesion", { mensaje: "El usuario no está registrado. Por favor, regístrese primero." });
+            return res.render("inicio_sesion", { mensaje: "El usuario no está o la contraseña no es la correcta" });
         }
 
-        // Si el usuario y la contraseña son correctos
         console.log("Inicio de sesión exitoso.");
-        
-        // Redirigir a la página principal o a la página que desees
         res.redirect("/primerahoja");
     });
 });
 
-// Ruta de la siguiente página donde se muestra el mensaje
-app.get("/primerahoja", (req, res) => {
-    const mensaje = req.query.mensaje || ''; // Obtener el mensaje de la URL
-    res.render("primerahoja", { mensaje });
-});
-
-
-
-
-
-
-
-
-
-
-
-// Ruta de la vista principal (ya estaba definida)
+// 🔎 Ruta principal con búsqueda filtrada
 app.get("/primerahoja", (req, res) => {
     const mensaje = req.query.mensaje || '';
-    res.render("primerahoja", { mensaje });
+    const busqueda = req.query.q;
+
+    let sql = 'SELECT * FROM libros_admi';
+    let valores = [];
+
+    if (busqueda && busqueda.trim() !== '') {
+        sql += ' WHERE nombre LIKE ? OR autor LIKE ? OR genero LIKE ? OR año LIKE ?';
+        valores = [`%${busqueda}%`, `%${busqueda}%`, `%${busqueda}%`, `%${busqueda}%`];
+    }
+
+    conexion.query(sql, valores, (error, results) => {
+        if (error) {
+            console.error("Error al consultar los libros:", error);
+            return res.send("Error al consultar los libros.");
+        }
+
+        res.render("primerahoja", { mensaje, libros: results, q: busqueda });
+    });
 });
 
-// Nuevas rutas para redireccionar a las demás vistas del menú
 app.get("/maspopulares", (req, res) => {
-    res.render("maspopulares"); // Debes tener un archivo maspopulares.ejs
+    res.render("maspopulares");
 });
 
 app.get("/categorias", (req, res) => {
-    res.render("categorias"); // Debes tener un archivo categorias.ejs
+    res.render("categorias");
 });
 
 app.get("/ayuda", (req, res) => {
-    res.render("ayuda"); // Debes tener un archivo ayuda.ejs
+    res.render("ayuda");
 });
 
 app.get("/contactanos", (req, res) => {
-    res.render("contactanos"); // Debes tener un archivo contactanos.ejs
+    res.render("contactanos");
 });
 
-app.get("/vender", (req, res) => {
-    res.render("vender"); // Debes tener un archivo vender.ejs
+app.get("/carrito_usua", (req, res) => {
+    const libros = [];
+    res.render("carrito_usua", { libros });
 });
 
-// Servidor escuchando
-app.listen(4000, () => {
-    console.log("Escuchando en http://localhost:4000");
+let libros = [];
+app.get("/administracion", (req, res) => {
+    res.render("administracion", { libros });
+});
+
+app.get('/guardar_libro', (req, res) => {
+    res.render('guardar_libro');
+});
+
+app.post("/guardar-libro", (req, res) => {
+    const { id, nombre, autor, genero, año } = req.body;
+
+    const sql = "INSERT INTO libros_admi (id, nombre, autor, genero, año) VALUES (?, ?, ?, ?, ?)";
+    conexion.query(sql, [id, nombre, autor, genero, año], (err, resultado) => {
+        if (err) {
+            console.error("Error al guardar el libro:", err);
+            return res.send("Error al guardar el libro.");
+        }
+
+        console.log("Libro guardado con éxito");
+        res.redirect("/administracion");
+    });
 });
 
 app.get('/comprar', (req, res) => {
-    // Aquí debes consultar los libros desde la base de datos
-    connection.query('SELECT * FROM libros', (error, results) => {
+    conexion.query('SELECT * FROM libros', (error, results) => {
         if (error) throw error;
         res.render('comprar', { libros: results });
     });
 });
 
-app.post('/comprar', (req, res) => {
-    const { libro_id, nombre_comprador, correo, direccion } = req.body;
-    connection.query(
-        'INSERT INTO compras (libro_id, nombre_comprador, correo, direccion) VALUES (?, ?, ?, ?)',
-        [libro_id, nombre_comprador, correo, direccion],
-        (error, results) => {
-            if (error) throw error;
-            res.send('Compra realizada con éxito.');
-        }
-    );
+app.listen(4000, () => {
+    console.log("Escuchando en http://localhost:4000");
 });
-
