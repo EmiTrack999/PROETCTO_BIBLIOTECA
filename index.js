@@ -100,8 +100,8 @@ app.get("/primerahoja", (req, res) => {
     let valores = [];
 
     if (busqueda && busqueda.trim() !== '') {
-        sql += ' WHERE nombre LIKE ? OR autor LIKE ? OR genero LIKE ? OR año LIKE ?';
-        valores = [`%${busqueda}%`, `%${busqueda}%`, `%${busqueda}%`, `%${busqueda}%`];
+        sql += ' WHERE id LIKE ? OR nombre LIKE ? OR autor LIKE ? OR categoria LIKE ?';
+        valores = [`%${busqueda}%`, `%${busqueda}%`, `%${busqueda}%`, `%${busqueda}%`, `%${busqueda}%`];
     }
 
     conexion.query(sql, valores, (error, results) => {
@@ -145,10 +145,10 @@ app.get('/guardar_libro', (req, res) => {
 });
 
 app.post("/guardar-libro", (req, res) => {
-    const { id, nombre, autor, genero, año } = req.body;
+    const { id, nombre, autor, categoria } = req.body;
 
-    const sql = "INSERT INTO libros_admi (id, nombre, autor, genero, año) VALUES (?, ?, ?, ?, ?)";
-    conexion.query(sql, [id, nombre, autor, genero, año], (err, resultado) => {
+    const sql = "INSERT INTO libros_admi (id, nombre, autor, categoria) VALUES (?, ?, ?, ?)";
+    conexion.query(sql, [id, nombre, autor, categoria], (err, resultado) => {
         if (err) {
             console.error("Error al guardar el libro:", err);
             return res.send("Error al guardar el libro.");
