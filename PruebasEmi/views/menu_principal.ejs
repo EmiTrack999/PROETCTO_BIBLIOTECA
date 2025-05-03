@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verso y Papel - Tu Biblioteca Digital</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap"/>
+  <link rel="stylesheet" href="/Styles.css" />
+  <link rel="stylesheet" href="/PruebasEmi/views/Styles.css" />
+  <link rel="stylesheet" href="/PruebasEmi/views/books.css" />
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      flex: 1;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
+    .book-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      padding: 0;
+      list-style-type: none;
+    }
+    .book-list li {
+      flex: 1 1 200px;
+    }
+    .book-button {
+      display: block;
+      width: 100%;
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 5px;
+      border: none;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+    .book-button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content-left">
+      <header>
+        <ul>
+          <li><a href="/login">Cerrar Sesión</a></li>
+          <li><a href="/maspopulares">Más Populares</a></li>
+          <li><a href="/categorias">Categorías</a></li>
+          <li><a href="/ayuda">Ayuda</a></li>
+          <li><a href="/contactanos">Contáctanos</a></li>
+          <li><a href="/contra_admi">Administración</a></li>
+          <li><a href="/carrito_usua"><img src="imagenes/carro-de-la-carretilla (1).png" alt=""></a></li>
+        </ul>
+      </header>
+
+      <section class="box">
+        <h2>Bienvenido a Verso y Papel</h2>
+        <p>Explora, sueña y descubre tu próxima gran aventura literaria.</p>
+
+        <!-- Formulario de búsqueda -->
+        <form action="/menu_principal" method="get" class="search-form">
+          <input type="search" id="busqueda" name="q" placeholder="Escribe tu búsqueda..." value="<%= typeof q !== 'undefined' ? q : '' %>" />
+          <button type="submit">Buscar</button>
+        </form>
+
+        <!-- Mostrar resultados de búsqueda -->
+        <% if (libros && libros.length > 0) { %>
+          <h3 style="margin-top: 30px;">Resultados de búsqueda</h3>
+          <ul class="book-list" id="book-list">
+            <% libros.forEach(libro => { %>
+              <li>
+                <button class="book-button">
+                  <%= libro.nombre %> - <%= libro.autor %><br>
+                </button>
+              </li>
+            <% }); %>
+          </ul>
+        <% } else { %>
+          <p style="margin-top: 20px;">No se encontraron libros con esa búsqueda.</p>
+        <% } %>
+      </section>
+    </div>
+
+    <div class="content-right">
+      <section class="box">
+        <h2>¿Sabías que un libro puede cambiar tu vida?</h2>
+        <p>La lectura abre puertas a mundos infinitos, despierta tu imaginación y te permite vivir mil vidas en una sola.</p>
+        <button class="btn-large">Empieza a Leer Ahora</button>
+      </section>
+
+      <section class="box">
+        <h2>Acerca de Nosotros</h2>
+        <p>En Verso y Papel, cada página cuenta una historia. Nuestra biblioteca fomenta el amor por la lectura.</p>
+      </section>
+
+      <section class="box">
+        <h2>Únete a Nuestra Comunidad</h2>
+        <p>Forma parte de nuestra comunidad de lectores apasionados y comparte tu amor por los libros con otros.</p>
+        <button class="btn">Registrarte</button>
+      </section>
+    </div>
+  </div>
+
+  <footer style="background-color: #333; color: white; text-align: center; padding: 20px;">
+    <p>&copy; 2025 Verso y Papel. Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>

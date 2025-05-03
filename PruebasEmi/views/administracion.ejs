@@ -69,12 +69,32 @@
         button:hover {
             background-color: #004a99;
         }
+
+        /* Estilos para los botones extra */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .button-container a {
+            text-decoration: none;
+            background-color: #004080;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container a:hover {
+            background-color: #003366;
+        }
     </style>
 </head>
 <body>
     <h1>Guardar Libro</h1>
-
-   
 
     <form action="/guardar-libro" method="POST">
         <label for="id">ID del Libro:</label>
@@ -86,12 +106,17 @@
         <label for="autor">Autor:</label>
         <input type="text" name="autor" id="autor" required>
 
-        <label for="categoria">Categoria</label>
+        <label for="categoria">Categoria:</label>
         <input type="text" name="categoria" id="categoria" required>
 
         <button type="submit">Guardar Libro</button>
-
-
     </form>
+
+    <!-- Botones de navegación -->
+    <div class="button-container">
+        <a href="/usuarios">Usuarios</a>
+        <a href="/ayuda_admin">Ayudas</a>
+    </div>
+
 </body>
-</html> 
+</html>
