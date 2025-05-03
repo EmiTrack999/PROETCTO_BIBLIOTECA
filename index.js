@@ -284,6 +284,36 @@ app.get('/ayuda_admin', (req, res) => {
 });
 
 
+//consulta libro por id
+app.get('/libro/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = 'SELECT * FROM libros_admi WHERE id = ?';
+    conexion.query(sql, [id], (err, resultados) => {
+        if (err) return res.send("Error al obtener el libro.");
+        if (resultados.length === 0) return res.status(404).send("Libro no encontrado");
+
+        const libro = resultados[0];
+
+        let vista = 'detalle_libro_generico';
+        switch (libro.nombre.toLowerCase()) {
+            case '¿Amar o depender?':
+                
+                vista = 'detalleslibro';
+                break;
+            case 'cien años de soledad':
+                vista = 'detalle_CienAnios';
+                break;
+            case 'don quijote':
+                vista = 'detalle_DonQuijote';
+                break;
+        }
+
+        res.render(vista, { libro });
+    });
+});
+
+
+
 
 // INICIAR EL SERVIDOR
 app.listen(4000, () => {

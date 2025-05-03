@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title><%= libro.nombre %> - Detalles</title>
+  <link rel="stylesheet" href="/Styles.css" />
+  <style>
+    .detalle-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f8f8f8;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      font-family: 'Montserrat', sans-serif;
+    }
+    .detalle-container h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .detalle-container h2 {
+      font-size: 20px;
+      color: #555;
+    }
+    .detalle-container p {
+      font-size: 16px;
+      margin-top: 20px;
+      line-height: 1.6;
+    }
+    .back-button {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .back-button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="detalle-container">
+    <h1><%= libro.nombre %></h1>
+    <h2>Autor: <%= libro.autor %></h2>
+
+    <% if (libro.descripcion) { %>
+      <p><%= libro.descripcion %></p>
+    <% } else { %>
+      <p>No hay una descripción disponible para este libro.</p>
+    <% } %>
+
+    <a href="/menu_principal" class="back-button">Volver al Menú</a>
+  </div>
+</body>
+</html>

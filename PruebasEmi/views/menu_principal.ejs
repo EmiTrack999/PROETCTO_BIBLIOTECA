@@ -87,12 +87,12 @@
           <ul class="book-list" id="book-list">
             <% libros.forEach(libro => { %>
               <li>
-                <button class="book-button">
+                <a href="/libro/<%= libro.id %>" class="book-button">
                   <%= libro.nombre %> - <%= libro.autor %><br>
-                </button>
+                </a>
               </li>
             <% }); %>
-          </ul>
+          </ul>          
         <% } else { %>
           <p style="margin-top: 20px;">No se encontraron libros con esa búsqueda.</p>
         <% } %>

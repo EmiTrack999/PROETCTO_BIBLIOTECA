@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title><%= libro.nombre %> - Detalles</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #38a169, #ed8936); /* verde a naranja */
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #2f855a;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #276749;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1><%= libro.nombre %></h1>
+        <p><strong>Autor:</strong> <%= libro.autor %></p>
+        <p><strong>Categoría:</strong> <%= libro.categoria %></p>
+        <p><strong>ID:</strong> <%= libro.id %></p>
+
+        <a href="/menu_principal">Volver</a>
+    </div>
+</body>
+</html>
