@@ -6,14 +6,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #FFB74D, #FFECB3); /* Naranja desvanecido */
+            background: linear-gradient(to right, #FFB74D, #FFECB3);
             margin: 0;
             padding: 20px;
         }
 
         h1, h2 {
             text-align: center;
-            color: #FF6F00; /* Naranja más oscuro */
+            color: #FF6F00;
         }
 
         table {
@@ -29,7 +29,7 @@
         }
 
         th {
-            background-color: #FF6F00; /* Naranja más oscuro */
+            background-color: #FF6F00;
             color: white;
         }
 
@@ -59,7 +59,7 @@
         button {
             margin-top: 20px;
             padding: 10px;
-            background-color: #FF6F00; /* Naranja más oscuro */
+            background-color: #FF6F00;
             color: white;
             border: none;
             border-radius: 5px;
@@ -67,7 +67,7 @@
         }
 
         button:hover {
-            background-color: #E65100; /* Un tono más oscuro de naranja */
+            background-color: #E65100;
         }
 
         .total {
@@ -75,12 +75,12 @@
             font-weight: bold;
             text-align: right;
             margin-top: 20px;
-            color: #FF6F00; /* Naranja más oscuro */
+            color: #FF6F00;
         }
 
         .empty-cart {
             text-align: center;
-            color: #FF6F00; /* Naranja más oscuro */
+            color: #FF6F00;
             font-size: 16px;
         }
     </style>
@@ -91,8 +91,8 @@
     <h2>Libros en tu Carrito</h2>
 
     <!-- Si el carrito está vacío, mostrar un mensaje -->
-    <% if (libros.length === 0) { %>
-        <p class="empty-cart">Tu carrito está vacío. Agrega libros para comprarlos.</p>
+    <% if (carrito.length === 0) { %>
+        <p class="empty-cart">Tu carrito está vacío. Agrega libros para comprar.</p>
     <% } else { %>
         <table>
             <thead>
@@ -102,15 +102,17 @@
                     <th>Cantidad</th>
                     <th>Precio</th>
                     <th>Total</th>
+                    <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
                 <% let totalCompra = 0; %>
                 <% libros.forEach(libro => { %>
                     <tr>
-                        <td><%= libro.titulo %></td>
+                        <td><%= libro.nombre %></td>
                         <td><%= libro.autor %></td>
                         <td>
+                            <!-- Formulario para actualizar la cantidad -->
                             <form action="/actualizar-cantidad" method="POST" style="display:inline;">
                                 <input type="hidden" name="libro_id" value="<%= libro.id %>">
                                 <input type="number" name="cantidad" value="<%= libro.cantidad %>" min="1" style="width: 50px;">
@@ -119,6 +121,13 @@
                         </td>
                         <td><%= libro.precio %> €</td>
                         <td><%= libro.cantidad * libro.precio %> €</td>
+                        <td>
+                            <!-- Formulario para eliminar el libro -->
+                            <form action="/eliminar-del-carrito" method="POST" style="display:inline;">
+                                <input type="hidden" name="libro_id" value="<%= libro.id %>">
+                                <button type="submit">Eliminar</button>
+                            </form>
+                        </td>
                     </tr>
                     <% totalCompra += libro.cantidad * libro.precio; %>
                 <% }) %>

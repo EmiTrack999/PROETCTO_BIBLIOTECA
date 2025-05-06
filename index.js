@@ -5,9 +5,21 @@ const mysql = require('mysql');
 // Iniciando la aplicación de Express
 const app = express();
 
+// Middleware de sesión (esto debe ir después de la inicialización de `app`)
+const session = require('express-session');
+app.use(session({
+    secret: 'mi_clave_secreta',
+    resave: false,
+    saveUninitialized: true
+}));
+
 // Middleware
 app.use(express.static(path.join(__dirname, 'PruebasEmi', 'views')));
 app.use(express.urlencoded({ extended: true }));
+
+// Servir las imágenes de forma correcta
+app.use('/imagenes', express.static(path.join(__dirname, 'PruebasEmi', 'views', 'imagenes')));
+
 
 // Configuración de la base de datos MySQL
 const conexion = mysql.createConnection({
@@ -151,10 +163,18 @@ app.get("/contactanos", (req, res) => {
     res.render("contactanos");
 });
 
-app.get("/carrito_usua", (req, res) => {
-    const libros = [];
-    res.render("carrito_usua", { libros });
+app.get('/carrito_usua', (req, res) => {
+    // Verificar si el carrito existe en la sesión
+    if (!req.session.carrito) {
+        req.session.carrito = []; // Si no existe, inicializa el carrito
+    }
+
+    // Renderiza la vista del carrito y pasa los libros en el carrito
+    res.render('carrito_usua', { carrito: req.session.carrito });
 });
+
+
+
 
 app.get('/mensaje-recibido', (req, res) => {
     res.render('msj_re');
@@ -199,10 +219,10 @@ app.get('/guardar_libro', (req, res) => {
 
 // Guardar libro en la base de datos
 app.post("/guardar-libro", (req, res) => {
-    const { id, nombre, autor, categoria } = req.body;
+    const { id, nombre, autor, categoria, descripcion, imagen } = req.body;
 
-    const sql = "INSERT INTO libros_admi (id, nombre, autor, categoria) VALUES (?, ?, ?, ?)";
-    conexion.query(sql, [id, nombre, autor, categoria], (err, resultado) => {
+    const sql = "INSERT INTO libros_admi (id, nombre, autor, categoria,descripcion,imagen) VALUES (?, ?, ?, ?, ?, ?)";
+    conexion.query(sql, [id, nombre, autor, categoria,descripcion, imagen], (err, resultado) => {
         if (err) {
             console.error("Error al guardar el libro:", err);
             return res.send("Error al guardar el libro.");
@@ -300,17 +320,52 @@ app.get('/libro/:id', (req, res) => {
                 
                 vista = 'detalleslibro';
                 break;
-            case 'cien años de soledad':
-                vista = 'detalle_CienAnios';
-                break;
-            case 'don quijote':
-                vista = 'detalle_DonQuijote';
-                break;
+            
         }
 
         res.render(vista, { libro });
     });
 });
+
+app.get('/carrito_usua', (req, res) => {
+    const libroId = req.query.agregar;  // Obtener el parámetro 'agregar'
+    
+    // Si el parámetro 'agregar' está presente
+    if (libroId) {
+        // Aquí deberías obtener el libro desde la base de datos por su ID
+        const sql = 'SELECT * FROM libros_admi WHERE id = ?';
+        conexion.query(sql, [libroId], (err, resultado) => {
+            if (err) {
+                console.error("Error al obtener el libro:", err);
+                return res.send("Error al obtener el libro.");
+            }
+            if (resultado.length > 0) {
+                const libro = resultado[0];
+                
+                // Inicializa el carrito si no existe
+                if (!req.session.carrito) {
+                    req.session.carrito = [];
+                }
+
+                // Verifica si el libro ya está en el carrito
+                const libroExistente = req.session.carrito.find(l => l.id === libro.id);
+                if (libroExistente) {
+                    libroExistente.cantidad += 1;  // Incrementa la cantidad
+                } else {
+                    libro.cantidad = 1;  // Si no está en el carrito, lo agrega con cantidad 1
+                    req.session.carrito.push(libro);
+                }
+            }
+
+            // Después de agregar el libro, redirige al carrito
+            res.redirect('/carrito_usua');
+        });
+    } else {
+        // Si no hay parámetro 'agregar', solo renderiza el carrito
+        res.render('carrito', { carrito: req.session.carrito || [] });
+    }
+});
+
 
 
 
