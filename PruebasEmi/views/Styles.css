@@ -1,13 +1,24 @@
+
 body {
-    background: linear-gradient(to right, #0074D9, #2ECC40);
+    background: linear-gradient(to right, #43C6AC, #F8FFAE); 
     font-family: 'Montserrat', sans-serif;
     margin: 0;
-    color: #fff;
+    color: #333333; 
     display: flex;
-    justify-content:left; /* Alinea hacia la izquierda */
+    justify-content: left;
     min-height: 100vh;
 }
-
+/*
+body {
+    background: linear-gradient(to right, #0F2027, #203A43, #2C5364); 
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    color: #F0F0F0; 
+    display: flex;
+    justify-content: left;
+    min-height: 100vh;
+}
+*/
 .container {
     display: flex;
     flex-direction: row;
@@ -42,7 +53,7 @@ body {
 
 header {
     padding: 20px;
-    background-color: #00509E;
+    background-color: #009e74;
     text-align: center;
     border-radius: 10px;
 }

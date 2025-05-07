@@ -4,68 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Categorías de Libros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom right, #4CAF50, #2196F3);
-            color: white;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to bottom right, #00B8D4, #00796B); /* Fondo azul menta */
+            color: #fff;
             margin: 0;
             height: 100vh;
             display: flex;
             flex-direction: column;
         }
-        
+
+        /* Barra de navegación */
         .navbar {
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.7);
             padding: 15px 20px;
             display: flex;
             justify-content: flex-start;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
+
         .navbar a {
             color: #fff;
             text-decoration: none;
             font-size: 1.2em;
             font-weight: bold;
+            padding: 10px;
+            transition: color 0.3s;
         }
+
         .navbar a:hover {
-            color: #0f0;
+            color: #FFD700; /* Dorado brillante en hover */
         }
-        /* Contenedor principal */
+
+        /* Contenido principal */
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 40px;
             text-align: center;
         }
+
         h1 {
             font-size: 3em;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-family: 'Pacifico', cursive;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
+
         ul {
             list-style: none;
             padding: 0;
             margin: 0;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            width: 100%;
         }
+
+        li {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.3em;
+            text-align: center;
+            font-weight: 500;
+            transition: background 0.3s, transform 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        li:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-6px);
+        }
+
+        li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        li a:hover {
+            color: #FFD700; /* Dorado en hover */
+        }
+
+        /* Diseño general */
+        .navbar, .main-content {
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+
+        /* Agregar un borde sutil al enlace */
         a {
             text-decoration: none;
-            color: white;
         }
-        li {
-            font-size: 1.5em;
-            margin: 10px 0;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background 0.3s;
-            width: 250px;
-        }
-        li:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
+
     </style>
 </head>
 <body>
@@ -79,19 +122,17 @@
     <div class="main-content">
         <h1>Categorías de Libros</h1>
         <ul>
-            <ul>
-                <li><a href="/categoria/Ficción">Ficción</a></li>
-                <li><a href="/categoria/No Ficción">No Ficción</a></li>
-                <li><a href="/categoria/Fantasía">Fantasía</a></li>
-                <li><a href="/categoria/Ciencia Ficción">Ciencia Ficción</a></li>
-                <li><a href="/categoria/Biografía">Biografía</a></li>
-                <li><a href="/categoria/Historia">Historia</a></li>
-                <li><a href="/categoria/Autoayuda">Autoayuda</a></li>
-                <li><a href="/categoria/Infantil">Infantil</a></li>
-                <li><a href="/categoria/Romance">Romance</a></li>
-                <li><a href="/categoria/Misterio">Misterio</a></li>
-            </ul>
-            
+            <li><a href="/categoria/Ficción">Ficción</a></li>
+            <li><a href="/categoria/No Ficción">No Ficción</a></li>
+            <li><a href="/categoria/Fantasía">Fantasía</a></li>
+            <li><a href="/categoria/Ciencia Ficción">Ciencia Ficción</a></li>
+            <li><a href="/categoria/Divulgación Científica">Divulgación Científica</a></li>
+            <li><a href="/categoria/Historia">Historia</a></li>
+            <li><a href="/categoria/Autoayuda">Autoayuda</a></li>
+            <li><a href="/categoria/Poesía">Poesía</a></li>
+            <li><a href="/categoria/Romance">Romance</a></li>
+            <li><a href="/categoria/Misterio">Misterio</a></li>
+            <li><a href="/categoria/Psicólogo">Psicología</a></li>
         </ul>
     </div>
 

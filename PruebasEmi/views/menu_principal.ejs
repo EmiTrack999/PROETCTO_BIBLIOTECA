@@ -26,33 +26,63 @@
       padding: 20px;
       background-color: #f2f2f2;
     }
+
+    /* SOLO ESTILOS MEJORADOS DE LOS LIBROS */
     .book-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
       margin-top: 20px;
       padding: 0;
       list-style-type: none;
     }
+
     .book-list li {
-      flex: 1 1 200px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.2s ease;
     }
+
+    .book-list li:hover {
+      transform: translateY(-4px);
+    }
+
     .book-button {
       display: block;
       width: 100%;
-      background-color: #4CAF50;
-      color: white;
-      padding: 12px 20px;
-      text-align: center;
+      background-color: transparent;
+      color: #333;
+      padding: 16px;
+      text-align: left;
       text-decoration: none;
-      border-radius: 5px;
       border: none;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
       cursor: pointer;
     }
+
+    .book-button h4 {
+      margin: 0 0 6px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #00ea17f9;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .book-icon {
+      font-size: 18px;
+    }
+
+    .book-button p {
+      margin: 0;
+      font-size: 14px;
+      color: #555;
+    }
+
     .book-button:hover {
-      background-color: #45a049;
+      background-color: #f9f9f9;
     }
   </style>
 </head>
@@ -61,7 +91,7 @@
     <div class="content-left">
       <header>
         <ul>
-          <li><a href="/login">Cerrar Sesión</a></li>
+          <li><a href="/login"><img src="imagenes/salida.png" alt=""></a></li>
           <li><a href="/maspopulares">Más Populares</a></li>
           <li><a href="/categorias">Categorías</a></li>
           <li><a href="/ayuda">Ayuda</a></li>
@@ -77,7 +107,7 @@
 
         <!-- Formulario de búsqueda -->
         <form action="/menu_principal" method="get" class="search-form">
-          <input type="search" id="busqueda" name="q" placeholder="Escribe tu búsqueda..." value="<%= typeof q !== 'undefined' ? q : '' %>" />
+          <input type="search" id="busqueda" name="q" placeholder="Busca tu Libro por Titulo o Autor. . ." value="<%= typeof q !== 'undefined' ? q : '' %>" />
           <button type="submit">Buscar</button>
         </form>
 
@@ -88,7 +118,8 @@
             <% libros.forEach(libro => { %>
               <li>
                 <a href="/libro/<%= libro.id %>" class="book-button">
-                  <%= libro.nombre %> - <%= libro.autor %><br>
+                  <h4><span class="book-icon">📗</span><%= libro.nombre %></h4>
+                  <p><%= libro.autor %></p>
                 </a>
               </li>
             <% }); %>
@@ -119,7 +150,7 @@
     </div>
   </div>
 
-  <footer style="background-color: #333; color: white; text-align: center; padding: 20px;">
+  <footer>
     <p>&copy; 2025 Verso y Papel. Todos los derechos reservados.</p>
   </footer>
 </body>

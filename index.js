@@ -219,10 +219,10 @@ app.get('/guardar_libro', (req, res) => {
 
 // Guardar libro en la base de datos
 app.post("/guardar-libro", (req, res) => {
-    const { id, nombre, autor, categoria, descripcion, imagen } = req.body;
+    const { id, nombre, autor, categoria, descripcion } = req.body;
 
-    const sql = "INSERT INTO libros_admi (id, nombre, autor, categoria,descripcion,imagen) VALUES (?, ?, ?, ?, ?, ?)";
-    conexion.query(sql, [id, nombre, autor, categoria,descripcion, imagen], (err, resultado) => {
+    const sql = "INSERT INTO libros_admi (id, nombre, autor, categoria,descripcion) VALUES (?, ?, ?, ?, ?)";
+    conexion.query(sql, [id, nombre, autor, categoria,descripcion], (err, resultado) => {
         if (err) {
             console.error("Error al guardar el libro:", err);
             return res.send("Error al guardar el libro.");
