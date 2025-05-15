@@ -9,95 +9,171 @@
   <link rel="stylesheet" href="/PruebasEmi/views/Styles.css" />
   <link rel="stylesheet" href="/PruebasEmi/views/books.css" />
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+  
     html, body {
       height: 100%;
       margin: 0;
       font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(to right, #2c3e50, #3498db); /* Fondo elegante */
+      color: #fff;
     }
+  
     body {
       display: flex;
       flex-direction: column;
     }
+  
     .container {
       flex: 1;
+      padding: 40px 20px;
     }
+  
     footer {
       text-align: center;
       padding: 20px;
-      background-color: #f2f2f2;
+      background-color: rgba(0, 0, 0, 0.2);
+      color: #ecf0f1;
     }
-
-    /* SOLO ESTILOS MEJORADOS DE LOS LIBROS */
+  
+    /* ESTILOS MEJORADOS DE LOS LIBROS */
     .book-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 28px;
       margin-top: 20px;
       padding: 0;
       list-style-type: none;
     }
-
+  
     .book-list li {
-      background-color: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background-color: #f8fafc;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px rgba(44, 62, 80, 0.10);
       overflow: hidden;
-      transition: transform 0.2s ease;
+      transition: transform 0.18s cubic-bezier(.4,0,.2,1), box-shadow 0.18s cubic-bezier(.4,0,.2,1);
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
-
+  
     .book-list li:hover {
-      transform: translateY(-4px);
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 8px 32px rgba(44, 62, 80, 0.18);
     }
-
+  
     .book-button {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
       width: 100%;
+      height: 100%;
       background-color: transparent;
-      color: #333;
-      padding: 16px;
+      color: #2c3e50;
+      padding: 22px 18px 18px 18px;
       text-align: left;
       text-decoration: none;
       border: none;
       cursor: pointer;
+      min-height: 120px;
+      box-sizing: border-box;
     }
-
+  
     .book-button h4 {
-      margin: 0 0 6px 0;
-      font-size: 16px;
-      font-weight: 600;
-      color: #00ea17f9;
+      margin: 0 0 8px 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: #5685a5;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      word-break: break-word;
+      line-height: 1.2;
     }
-
+  
     .book-icon {
-      font-size: 18px;
+      font-size: 20px;
+      color: #3498db;
     }
-
+  
     .book-button p {
-      margin: 0;
-      font-size: 14px;
+      margin: 0 0 6px 0;
+      font-size: 16px;
       color: #555;
+      word-break: break-word;
+      line-height: 1.3;
+    }
+  
+    .book-price {
+      margin: 10px 0 0 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: #27ae60;
+      background: #eafaf1;
+      border-radius: 4px;
+      display: inline-block;
+      padding: 4px 16px;
+      box-shadow: 0 1px 3px rgba(39, 174, 96, 0.08);
     }
 
-    .book-button:hover {
-      background-color: #f9f9f9;
+    .modal-sabiasque {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: auto;
+      background-color: rgba(44, 62, 80, 0.7);
+    }
+    .modal-content-sabiasque {
+      background-color: #fff;
+      margin: 8% auto;
+      padding: 30px 24px 24px 24px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 420px;
+      color: #2c3e50;
+      box-shadow: 0 4px 24px rgba(44, 62, 80, 0.18);
+      position: relative;
+      font-family: 'Montserrat', sans-serif;
+      animation: modalFadeIn 0.3s;
+    }
+    .close-sabiasque {
+      color: #aaa;
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .close-sabiasque:hover {
+      color: #e74c3c;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
+  
 </head>
 <body>
   <div class="container">
     <div class="content-left">
       <header>
         <ul>
-          <li><a href="/login"><img src="imagenes/salida.png" alt=""></a></li>
-          <li><a href="/maspopulares">Más Populares</a></li>
-          <li><a href="/categorias">Categorías</a></li>
-          <li><a href="/ayuda">Ayuda</a></li>
-          <li><a href="/contactanos">Contáctanos</a></li>
-          <li><a href="/contra_admi">Administración</a></li>
-          <li><a href="/carrito_usua"><img src="imagenes/carro-de-la-carretilla (1).png" alt=""></a></li>
+          <li><a href="/login"><img src="imagenes/salida.png" alt="Cerrar sesión"></a><br><span style="color: white; font-size: 12px;">Cerrar Sesión</span></li>
+          <li><a href="/maspopulares"><img src="imagenes/fuego.png" alt="Más Populares" style="width:22px; vertical-align:middle; margin-right:6px;">Más Populares</a></li>
+          <li><a href="/categorias"><img src="imagenes/file-and-folder.png" alt="Categorías" style="width:22px; vertical-align:middle; margin-right:6px;">Categorías</a></li>
+          <li><a href="/ayuda"><img src="imagenes/confundido.png" alt="Ayuda" style="width:22px; vertical-align:middle; margin-right:6px;">Ayuda</a></li>
+          <li><a href="/contactanos"><img src="imagenes/telefono.png" alt="Contáctanos" style="width:22px; vertical-align:middle; margin-right:6px;">Contáctanos</a></li>
+          <!-- <li><a href="/contra_admi">Administración</a></li> -->
+          <li><a href="/carrito_usua"><img src="imagenes/carro-de-la-carretilla (1).png" alt="Carrito de compras"></a><br><span style="color: white; font-size: 12px;">Carrito de Compras</span></li>
+          <li><a href="/ver_precios"><img src="imagenes/etiqueta-de-precio.png" alt="Ver Precios" style="width:22px; vertical-align:middle; margin-right:6px;">Ver Precios</a></li>
         </ul>
       </header>
 
@@ -120,6 +196,7 @@
                 <a href="/libro/<%= libro.id %>" class="book-button">
                   <h4><span class="book-icon">📗</span><%= libro.nombre %></h4>
                   <p><%= libro.autor %></p>
+                  <p class="book-price">$250.00 MXN</p>
                 </a>
               </li>
             <% }); %>
@@ -132,10 +209,36 @@
 
     <div class="content-right">
       <section class="box">
-        <h2>¿Sabías que un libro puede cambiar tu vida?</h2>
+        <h2 id="sabias-que" style="cursor:pointer; text-decoration:underline;">¿Sabías que un libro puede cambiar tu vida?</h2>
         <p>La lectura abre puertas a mundos infinitos, despierta tu imaginación y te permite vivir mil vidas en una sola.</p>
-        <button class="btn-large">Empieza a Leer Ahora</button>
       </section>
+      <div id="modalSabiasQue" class="modal-sabiasque" style="display:none;">
+        <div class="modal-content-sabiasque">
+          <span class="close-sabiasque" id="closeModalSabiasQue">&times;</span>
+          <h3>¿Por qué un libro puede cambiar tu vida?</h3>
+          <ul>
+            <li>Los libros estimulan la creatividad y el pensamiento crítico.</li>
+            <li>Fomentan la empatía al ponerte en el lugar de otros personajes.</li>
+            <li>Ayudan a reducir el estrés y mejorar la concentración.</li>
+            <li>Te permiten adquirir nuevos conocimientos y habilidades.</li>
+            <li>La lectura puede inspirar cambios positivos y nuevas perspectivas.</li>
+          </ul>
+        </div>
+      </div>
+      <script>
+        document.getElementById('sabias-que').onclick = function() {
+          document.getElementById('modalSabiasQue').style.display = 'block';
+        };
+        document.getElementById('closeModalSabiasQue').onclick = function() {
+          document.getElementById('modalSabiasQue').style.display = 'none';
+        };
+        window.onclick = function(event) {
+          var modal = document.getElementById('modalSabiasQue');
+          if (event.target == modal) {
+            modal.style.display = 'none';
+          }
+        };
+      </script>
 
       <section class="box">
         <h2>Acerca de Nosotros</h2>
@@ -145,7 +248,6 @@
       <section class="box">
         <h2>Únete a Nuestra Comunidad</h2>
         <p>Forma parte de nuestra comunidad de lectores apasionados y comparte tu amor por los libros con otros.</p>
-        <button class="btn">Registrarte</button>
       </section>
     </div>
   </div>

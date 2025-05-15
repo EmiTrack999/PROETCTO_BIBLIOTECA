@@ -97,7 +97,16 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
     const { usuario, contrasena } = req.body;
 
+    // Acceso directo para el admin SOLO con el correo
+    if (usuario === "Biblioteca@Admin.com") {
+        req.session.usuario = usuario;
+        req.session.esAdmin = true;
+        return res.redirect("/administracion");
+    }
+
+    // Para los demás usuarios, sí se requiere usuario y contraseña
     if (!usuario || !contrasena) {
+        // Si el usuario es el admin, no mostrar este mensaje
         return res.render("inicio_sesion", { mensaje: "Por favor ingrese su correo y contraseña." });
     }
 
@@ -117,6 +126,7 @@ app.post("/login", (req, res) => {
             return res.render("inicio_sesion", { mensaje: "Correo o contraseña incorrectos." });
         }
 
+        req.session.usuario = usuario;
         res.redirect("/menu_principal");
     });
 });
@@ -148,7 +158,14 @@ app.get("/menu_principal", (req, res) => {
 
 // Otras páginas
 app.get("/maspopulares", (req, res) => {
-    res.render("maspopulares");
+    const sql = "SELECT * FROM libros_admi ORDER BY popularidad DESC LIMIT 5";
+    conexion.query(sql, (error, resultados) => {
+        if (error) {
+            console.error("Error al obtener los libros más populares:", error);
+            return res.render("maspopulares", { libros: [] }); // Mostrar página sin error
+        }
+        res.render("maspopulares", { libros: resultados });
+    });
 });
 
 app.get("/categorias", (req, res) => {
@@ -163,21 +180,118 @@ app.get("/contactanos", (req, res) => {
     res.render("contactanos");
 });
 
-app.get('/carrito_usua', (req, res) => {
-    // Verificar si el carrito existe en la sesión
-    if (!req.session.carrito) {
-        req.session.carrito = []; // Si no existe, inicializa el carrito
-    }
+// --- CARRITO PROFESIONAL CON BASE DE DATOS ---
 
-    // Renderiza la vista del carrito y pasa los libros en el carrito
-    res.render('carrito_usua', { carrito: req.session.carrito });
+// Mostrar carrito del usuario
+app.get('/carrito_usua', (req, res) => {
+    if (!req.session.usuario) {
+        return res.redirect('/login');
+    }
+    const usuario = req.session.usuario;
+    const sql = `SELECT p.libro_id, p.cantidad, l.nombre, l.autor, l.id
+                 FROM pedidos p
+                 JOIN libros_admi l ON p.libro_id = l.id
+                 WHERE p.usuario = ?`;
+    conexion.query(sql, [usuario], (err, results) => {
+        if (err) {
+            console.error('Error al obtener el carrito:', err);
+            return res.send('Error al obtener el carrito.');
+        }
+        // Agrega el precio fijo
+        const carrito = results.map(libro => ({
+            ...libro,
+            precio: 250
+        }));
+        res.render('carrito_usua', { carrito });
+    });
 });
 
+// Agregar libro al carrito
+app.post('/agregar-al-carrito', (req, res) => {
+    if (!req.session.usuario) {
+        return res.redirect('/login');
+    }
+    const usuario = req.session.usuario;
+    const { libro_id } = req.body;
+    // Verifica si ya existe el libro en el carrito
+    const sqlCheck = 'SELECT * FROM pedidos WHERE usuario = ? AND libro_id = ?';
+    conexion.query(sqlCheck, [usuario, libro_id], (err, results) => {
+        if (err) return res.send('Error al agregar al carrito.');
+        if (results.length > 0) {
+            // Si existe, actualiza la cantidad
+            const sqlUpdate = 'UPDATE pedidos SET cantidad = cantidad + 1 WHERE usuario = ? AND libro_id = ?';
+            conexion.query(sqlUpdate, [usuario, libro_id], (err2) => {
+                if (err2) return res.send('Error al actualizar cantidad.');
+                res.redirect('/carrito_usua');
+            });
+        } else {
+            // Si no existe, inserta
+            const sqlInsert = 'INSERT INTO pedidos (usuario, libro_id, cantidad) VALUES (?, ?, 1)';
+            conexion.query(sqlInsert, [usuario, libro_id], (err3) => {
+                if (err3) return res.send('Error al agregar libro.');
+                res.redirect('/carrito_usua');
+            });
+        }
+    });
+});
 
+// Actualizar cantidad de un libro en el carrito
+app.post('/actualizar-cantidad', (req, res) => {
+    if (!req.session.usuario) {
+        return res.redirect('/login');
+    }
+    const usuario = req.session.usuario;
+    const { libro_id, cantidad } = req.body;
+    const sql = 'UPDATE pedidos SET cantidad = ? WHERE usuario = ? AND libro_id = ?';
+    conexion.query(sql, [cantidad, usuario, libro_id], (err) => {
+        if (err) return res.send('Error al actualizar cantidad.');
+        res.redirect('/carrito_usua');
+    });
+});
 
+// Eliminar libro del carrito
+app.post('/eliminar-del-carrito', (req, res) => {
+    if (!req.session.usuario) {
+        return res.redirect('/login');
+    }
+    const usuario = req.session.usuario;
+    const { libro_id } = req.body;
+    const sql = 'DELETE FROM pedidos WHERE usuario = ? AND libro_id = ?';
+    conexion.query(sql, [usuario, libro_id], (err) => {
+        if (err) return res.send('Error al eliminar libro.');
+        res.redirect('/carrito_usua');
+    });
+});
 
-app.get('/mensaje-recibido', (req, res) => {
-    res.render('msj_re');
+// Ruta para procesar la compra y mostrar agradecimiento
+app.post('/finalizar-compra', (req, res) => {
+    const { nombre_comprador, correo } = req.body;
+
+    // Limpiar el carrito después de la compra
+    const usuario = req.session.usuario;
+    const sql = 'DELETE FROM pedidos WHERE usuario = ?';
+    conexion.query(sql, [usuario], (err) => {
+        if (err) return res.send('Error al finalizar la compra.');
+        res.render('agradecimiento', { nombre_comprador, correo });
+    });
+});
+
+// Procesar la compra desde el carrito
+app.post('/comprar', (req, res) => {
+    if (!req.session.usuario) {
+        return res.redirect('/login');
+    }
+    const { nombre_comprador, correo, direccion } = req.body;
+    if (!nombre_comprador || !correo || !direccion) {
+        return res.status(400).send("Faltan datos para completar la compra.");
+    }
+    const usuario = req.session.usuario;
+    // Limpiar el carrito después de la compra
+    const sql = 'DELETE FROM pedidos WHERE usuario = ?';
+    conexion.query(sql, [usuario], (err) => {
+        if (err) return res.send('Error al finalizar la compra.');
+        res.render('agradecimiento', { nombre_comprador, correo });
+    });
 });
 
 // RUTAS PARA ADMINISTRACIÓN
@@ -235,10 +349,37 @@ app.post("/guardar-libro", (req, res) => {
 
 // Página de compra de libros
 app.get('/comprar', (req, res) => {
-    conexion.query('SELECT * FROM libros', (error, results) => {
-        if (error) throw error;
-        res.render('comprar', { libros: results });
-    });
+    const libroId = req.query.id;
+    if (libroId) {
+        // Mostrar solo el libro seleccionado para compra individual
+        const sql = 'SELECT * FROM libros_admi WHERE id = ?';
+        conexion.query(sql, [libroId], (error, results) => {
+            if (error || results.length === 0) {
+                return res.send("Error al obtener el libro para comprar.");
+            }
+            const libro = results[0];
+            libro.precio = 250;
+            res.render('comprar', { libro });
+        });
+    } else {
+        res.redirect('/menu_principal');
+    }
+});
+
+app.get('/compra_individual', (req, res) => {
+    const libroId = req.query.id;
+    if (libroId) {
+        const sql = 'SELECT * FROM libros_admi WHERE id = ?';
+        conexion.query(sql, [libroId], (error, results) => {
+            if (error || results.length === 0) {
+                return res.send("Error al obtener el libro para comprar.");
+            }
+            const libro = results[0];
+            res.render('compra_individual', { libro });
+        });
+    } else {
+        res.redirect('/menu_principal');
+    }
 });
 
 app.get('/categoria/:nombre', (req, res) => {
@@ -327,48 +468,17 @@ app.get('/libro/:id', (req, res) => {
     });
 });
 
-app.get('/carrito_usua', (req, res) => {
-    const libroId = req.query.agregar;  // Obtener el parámetro 'agregar'
-    
-    // Si el parámetro 'agregar' está presente
-    if (libroId) {
-        // Aquí deberías obtener el libro desde la base de datos por su ID
-        const sql = 'SELECT * FROM libros_admi WHERE id = ?';
-        conexion.query(sql, [libroId], (err, resultado) => {
-            if (err) {
-                console.error("Error al obtener el libro:", err);
-                return res.send("Error al obtener el libro.");
-            }
-            if (resultado.length > 0) {
-                const libro = resultado[0];
-                
-                // Inicializa el carrito si no existe
-                if (!req.session.carrito) {
-                    req.session.carrito = [];
-                }
-
-                // Verifica si el libro ya está en el carrito
-                const libroExistente = req.session.carrito.find(l => l.id === libro.id);
-                if (libroExistente) {
-                    libroExistente.cantidad += 1;  // Incrementa la cantidad
-                } else {
-                    libro.cantidad = 1;  // Si no está en el carrito, lo agrega con cantidad 1
-                    req.session.carrito.push(libro);
-                }
-            }
-
-            // Después de agregar el libro, redirige al carrito
-            res.redirect('/carrito_usua');
-        });
-    } else {
-        // Si no hay parámetro 'agregar', solo renderiza el carrito
-        res.render('carrito', { carrito: req.session.carrito || [] });
-    }
+// Página para ver todos los libros y sus precios
+app.get("/ver_precios", (req, res) => {
+    const sql = "SELECT * FROM libros_admi";
+    conexion.query(sql, (error, libros) => {
+        if (error) {
+            console.error("Error al consultar los libros:", error);
+            return res.send("Error al consultar los libros.");
+        }
+        res.render("ver_precios", { libros });
+    });
 });
-
-
-
-
 
 // INICIAR EL SERVIDOR
 app.listen(4000, () => {

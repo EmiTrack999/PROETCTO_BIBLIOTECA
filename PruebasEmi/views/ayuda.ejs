@@ -6,67 +6,92 @@
     <title>Atención al Cliente</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #00f, #0f0);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #2c3e50, #3498db); /* Azul oscuro a azul claro */
             color: #fff;
             text-align: center;
             padding: 0;
             margin: 0;
         }
+    
         /* Barra de navegación */
         .navbar {
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 15px 20px;
+            background-color: rgba(0, 0, 0, 0.85);
+            padding: 15px 25px;
             display: flex;
             justify-content: flex-start;
             align-items: center;
         }
+    
         .navbar a {
-            color: #fff;
+            color: #ecf0f1;
             text-decoration: none;
-            margin-right: 20px;
-            font-size: 1.2em;
-            font-weight: bold;
+            margin-right: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: color 0.3s;
         }
+    
         .navbar a:hover {
-            color: #0f0;
+            color: #f1c40f;
         }
+    
         .container {
-            background: rgba(255, 255, 255, 0.8);
-            color: #000;
-            padding: 20px;
-            border-radius: 10px;
+            background: #ffffff;
+            color: #2c3e50;
+            padding: 30px;
+            border-radius: 12px;
             max-width: 600px;
-            margin: 50px auto; /* Deja espacio para la barra */
+            margin: 60px auto;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
+    
         h1 {
-            color: #00f;
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 25px;
         }
+    
         label {
             display: block;
-            margin: 10px 0 5px;
+            text-align: left;
+            margin: 15px 0 6px;
+            font-weight: 600;
         }
+    
         input, textarea {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
+    
+        input:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+    
         .button {
-            background-color: #00f;
+            background-color: #3498db;
             color: #fff;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
         }
+    
         .button:hover {
-            background-color: #0f0;
-            color: #000;
+            background-color: #f1c40f;
+            color: #2c3e50;
         }
     </style>
+    
 </head>
 <body>
 

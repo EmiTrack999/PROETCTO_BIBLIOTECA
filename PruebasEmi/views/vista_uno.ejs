@@ -1,42 +1,41 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión - Biblioteca</title>
+    <title>Registrar Cuenta - Biblioteca</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #004080, #008000);
+            background: linear-gradient(135deg, #004080, #5dade2);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
         }
-        .login-container {
+        .register-container {
             background-color: #ffffff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            width: 320px;
             text-align: center;
         }
-        .login-container h1 {
+        .register-container h1 {
             color: #004080;
             margin-bottom: 20px;
         }
-        .login-container input[type="text"],
-        .login-container input[type="password"] {
+        .register-container input[type="text"],
+        .register-container input[type="password"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        .login-container button {
-            background-color: #008000;
+        .register-container button {
+            background-color: #004080;
             color: #ffffff;
             padding: 10px;
             border: none;
@@ -44,37 +43,30 @@
             cursor: pointer;
             width: 100%;
         }
-        .login-container button:hover {
-            background-color: #005700;
+        .register-container button:hover {
+            background-color: #003366;
         }
-
-        .volver-btn {
+        .message {
+            color: red;
             margin-top: 10px;
-            display: inline-block;
-            background-color: #004080;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .volver-btn:hover {
-            background-color: #002d5a;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h1>Registrarse</h1>
+    <div class="register-container">
+        <img src="imagenes/imagenessalida.png.png" alt="Logotipo de la empresa" style="width: 150px; height: auto; margin-bottom: 20px;">
+        <h1>Registrar Cuenta</h1>
         <form action="/registrar" method="POST">
-            <input type="text" name="usuario" placeholder="Usuario" required>
+            <input type="text" name="usuario" placeholder="Correo electrónico" required>
             <input type="password" name="contrasena" placeholder="Contraseña" required>
             <button type="submit">Registrar</button>
-            <% if (mensaje) { %>
-                <p style="color: red;"><strong><%= mensaje %></strong></p>
-            <% } %>
         </form>
-        <a href="/login" class="volver-btn">Volver</a>
+        <% if (mensaje) { %>
+            <p class="message"><strong><%= mensaje %></strong></p>
+        <% } %>
+        <form action="/login" method="GET">
+            <button type="submit" style="background-color:#5dade2; margin-top:10px;">Volver a Iniciar Sesión</button>
+        </form>
     </div>
 </body>
 </html>

@@ -1,6 +1,5 @@
-
 body {
-    background: linear-gradient(to right, #43C6AC, #F8FFAE); 
+    background: linear-gradient(to right, #43b7c6, #F8FFAE); 
     font-family: 'Montserrat', sans-serif;
     margin: 0;
     color: #333333; 
@@ -8,6 +7,7 @@ body {
     justify-content: left;
     min-height: 100vh;
 }
+
 /*
 body {
     background: linear-gradient(to right, #0F2027, #203A43, #2C5364); 
@@ -19,6 +19,7 @@ body {
     min-height: 100vh;
 }
 */
+
 .container {
     display: flex;
     flex-direction: row;
@@ -53,7 +54,7 @@ body {
 
 header {
     padding: 20px;
-    background-color: #009e74;
+    background-color: #5dade2; /* Color azul profesional */
     text-align: center;
     border-radius: 10px;
 }
@@ -98,7 +99,7 @@ footer {
 }
 
 .search-form button {
-    background-color: #2ECC40;
+    background-color: #5dade2; /* Cambiado de verde a azul profesional */
     border: none;
     padding: 10px 15px;
     border-radius: 5px;

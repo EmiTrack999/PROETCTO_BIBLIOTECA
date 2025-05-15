@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gracias por tu compra</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #1abc9c, #16a085);
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .mensaje {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 50px;
+        }
+
+        .mensaje h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .mensaje p {
+            font-size: 1.2em;
+        }
+
+        .volver {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #16a085;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .volver:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="mensaje">
+        <h1>¡Gracias por tu compra, <%= nombre_comprador %>!</h1>
+        <p>Hemos enviado un correo de confirmación a <%= correo %>.</p>
+        <p>Esperamos que disfrutes de tu lectura.</p>
+    </div>
+
+    <a href="/menu_principal" class="volver">Volver al Menú Principal</a>
+</body>
+</html>

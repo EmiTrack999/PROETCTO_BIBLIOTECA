@@ -122,11 +122,33 @@
                     <p><span class="label">Autor:</span> ${libro.autor}</p>
                     <p><span class="label">Descripción:</span> ${libro.descripcion}</p>
                     <p><span class="label">Biografía:</span> ${libro.biografia}</p>
+                    <button onclick="mostrarPrecios('${libro.titulo}')">Comprar</button>
                 `;
                 contenedor.appendChild(div);
             });
         } else {
             titulo.textContent = 'Categoría no encontrada';
+        }
+
+        function mostrarPrecios(titulo) {
+            const precios = {
+                'El Alquimista': { mxn: 300, usd: 15, eur: 13 },
+                'Los Miserables': { mxn: 500, usd: 25, eur: 22 },
+                'Orgullo y Prejuicio': { mxn: 400, usd: 20, eur: 18 },
+                'Sapiens': { mxn: 450, usd: 23, eur: 20 },
+                'Breves respuestas a las grandes preguntas': { mxn: 350, usd: 18, eur: 16 },
+                'Educated': { mxn: 380, usd: 19, eur: 17 },
+                'Harry Potter y la piedra filosofal': { mxn: 320, usd: 16, eur: 14 },
+                'El Señor de los Anillos': { mxn: 600, usd: 30, eur: 27 },
+                'Las Crónicas de Narnia': { mxn: 450, usd: 23, eur: 20 }
+            };
+
+            const precio = precios[titulo];
+            if (precio) {
+                alert(`Precios para "${titulo}":\n- Pesos Mexicanos: $${precio.mxn}\n- Dólares: $${precio.usd}\n- Euros: €${precio.eur}`);
+            } else {
+                alert('Precio no disponible para este libro.');
+            }
         }
     </script>
 </body>

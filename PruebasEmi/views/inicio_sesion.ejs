@@ -7,13 +7,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #004080, #008000);
+            background: linear-gradient(135deg, #004080, #5dade2); /* degradado azul elegante */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
         }
+    
         .login-container {
             background-color: #ffffff;
             padding: 20px;
@@ -22,10 +23,12 @@
             width: 300px;
             text-align: center;
         }
+    
         .login-container h1 {
             color: #004080;
             margin-bottom: 20px;
         }
+    
         .login-container input[type="text"],
         .login-container input[type="password"] {
             width: 100%;
@@ -34,8 +37,9 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+    
         .login-container button {
-            background-color: #008000;
+            background-color: #5dade2; /* azul profesional */
             color: #ffffff;
             padding: 10px;
             border: none;
@@ -43,13 +47,16 @@
             cursor: pointer;
             width: 100%;
         }
+    
         .login-container button:hover {
-            background-color: #005700;
+            background-color: #2e8bc0; /* azul más oscuro al pasar el mouse */
         }
+    
         .message {
             color: red;
             margin-top: 10px;
         }
+    
         .register-button {
             background-color: #004080;
             color: #ffffff;
@@ -60,19 +67,35 @@
             width: 100%;
             margin-top: 10px;
         }
+    
         .register-button:hover {
             background-color: #003366;
         }
     </style>
+    
 </head>
 <body>
     <div class="login-container">
+        <!-- Logotipo de la empresa -->
+        <img src="imagenes/imagenessalida.png.png" alt="Logotipo de la empresa" style="width: 150px; height: auto; margin-bottom: 20px;">
         <h1>Iniciar Sesión</h1>
-        <form action="/login" method="POST">
-            <input type="text" name="usuario" placeholder="Usuario" required>
-            <input type="password" name="contrasena" placeholder="Contraseña" required>
+        <form id="loginForm" action="/login" method="POST">
+            <input type="text" name="usuario" id="usuarioInput" placeholder="Usuario" required>
+            <input type="password" name="contrasena" id="contrasenaInput" placeholder="Contraseña" required>
             <button type="submit">Iniciar sesión</button>
         </form>
+        <script>
+            // Permitir que el admin entre sin contraseña
+            document.getElementById('usuarioInput').addEventListener('input', function() {
+                const correo = this.value.trim();
+                const passInput = document.getElementById('contrasenaInput');
+                if (correo === 'Biblioteca@Admin.com') {
+                    passInput.removeAttribute('required');
+                } else {
+                    passInput.setAttribute('required', 'required');
+                }
+            });
+        </script>
 
         <!-- Mostrar el mensaje de error si es necesario -->
         <% if (mensaje) { %>
@@ -86,4 +109,3 @@
     </div>
 </body>
 </html>
- 

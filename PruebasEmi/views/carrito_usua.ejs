@@ -5,15 +5,51 @@
     <title>Carrito de Compras - Verso y Papel</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(to right, #FFB74D, #FFECB3);
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            color: #333;
         }
 
-        h1, h2 {
+        header {
+            background-color: #FF6F00;
+            color: white;
+            padding: 20px 0;
             text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fffef9;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 16px;
+            background-color: #FF6F00;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #E65100;
+        }
+
+        h2 {
             color: #FF6F00;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #FFB74D;
+            padding-bottom: 5px;
         }
 
         table {
@@ -23,137 +59,174 @@
         }
 
         th, td {
-            padding: 10px;
-            border: 1px solid #ccc;
+            padding: 12px 15px;
             text-align: center;
+            border-bottom: 1px solid #ddd;
         }
 
         th {
             background-color: #FF6F00;
             color: white;
+            font-weight: 600;
         }
 
-        form {
-            max-width: 500px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        form.inline {
+            display: inline;
         }
 
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            text-align: center;
         }
 
-        button {
-            margin-top: 20px;
-            padding: 10px;
+        .btn {
+            padding: 8px 12px;
             background-color: #FF6F00;
             color: white;
             border: none;
             border-radius: 5px;
+            margin-top: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        button:hover {
+        .btn:hover {
             background-color: #E65100;
         }
 
         .total {
-            font-size: 18px;
-            font-weight: bold;
             text-align: right;
-            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
             color: #FF6F00;
+            margin-top: 10px;
         }
 
         .empty-cart {
             text-align: center;
+            font-size: 18px;
             color: #FF6F00;
+            padding: 30px 0;
+        }
+
+        .checkout-form {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
             font-size: 16px;
+            background-color: #FF6F00;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .confirm-btn:hover {
+            background-color: #E65100;
         }
     </style>
 </head>
 <body>
-    <h1>Carrito de Compras</h1>
+    <header>
+        <h1>🛒 Carrito de Compras - Verso y Papel</h1>
+    </header>
 
-    <h2>Libros en tu Carrito</h2>
+    <main>
+        <a href="/menu_principal" class="back-btn">← Volver al Menú Principal</a>
 
-    <!-- Si el carrito está vacío, mostrar un mensaje -->
-    <% if (carrito.length === 0) { %>
-        <p class="empty-cart">Tu carrito está vacío. Agrega libros para comprar.</p>
-    <% } else { %>
-        <table>
-            <thead>
-                <tr>
-                    <th>Título</th>
-                    <th>Autor</th>
-                    <th>Cantidad</th>
-                    <th>Precio</th>
-                    <th>Total</th>
-                    <th>Eliminar</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% let totalCompra = 0; %>
-                <% libros.forEach(libro => { %>
+        <h2>Libros en tu Carrito</h2>
+
+        <% if (carrito.length === 0) { %>
+            <p class="empty-cart">Tu carrito está vacío. Agrega libros para comprar.</p>
+        <% } else { %>
+            <% carrito.forEach(libro => { libro.precio = 250; }); %>
+            <table>
+                <thead>
                     <tr>
-                        <td><%= libro.nombre %></td>
-                        <td><%= libro.autor %></td>
-                        <td>
-                            <!-- Formulario para actualizar la cantidad -->
-                            <form action="/actualizar-cantidad" method="POST" style="display:inline;">
-                                <input type="hidden" name="libro_id" value="<%= libro.id %>">
-                                <input type="number" name="cantidad" value="<%= libro.cantidad %>" min="1" style="width: 50px;">
-                                <button type="submit">Actualizar</button>
-                            </form>
-                        </td>
-                        <td><%= libro.precio %> €</td>
-                        <td><%= libro.cantidad * libro.precio %> €</td>
-                        <td>
-                            <!-- Formulario para eliminar el libro -->
-                            <form action="/eliminar-del-carrito" method="POST" style="display:inline;">
-                                <input type="hidden" name="libro_id" value="<%= libro.id %>">
-                                <button type="submit">Eliminar</button>
-                            </form>
-                        </td>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Subtotal</th>
+                        <th>Eliminar</th>
                     </tr>
-                    <% totalCompra += libro.cantidad * libro.precio; %>
-                <% }) %>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <% let totalCompra = 0; %>
+                    <% carrito.forEach(libro => { %>
+                        <tr>
+                            <td><%= libro.nombre %></td>
+                            <td><%= libro.autor %></td>
+                            <td>
+                                <form action="/actualizar-cantidad" method="POST" class="inline">
+                                    <input type="hidden" name="libro_id" value="<%= libro.id %>">
+                                    <input type="number" name="cantidad" value="<%= libro.cantidad %>" min="1">
+                                    <button type="submit" class="btn">Actualizar</button>
+                                </form>
+                            </td>
+                            <td>$<%= libro.precio %> MXN</td>
+                            <td>$<%= libro.cantidad * libro.precio %> MXN</td>
+                            <td>
+                                <form action="/eliminar-del-carrito" method="POST" class="inline">
+                                    <input type="hidden" name="libro_id" value="<%= libro.id %>">
+                                    <button type="submit" class="btn">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% totalCompra += libro.cantidad * libro.precio; %>
+                    <% }) %>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="total">Total:</td>
+                        <td colspan="2" class="total">$<%= totalCompra %> MXN</td>
+                    </tr>
+                </tfoot>
+            </table>
+        <% } %>
 
-        <!-- Mostrar el total -->
-        <div class="total">
-            Total: <%= totalCompra %> €
+        <div class="checkout-form">
+            <h2>Detalles de Envío</h2>
+            <form action="/comprar" method="POST">
+                <label for="nombre_comprador">Tu Nombre:</label>
+                <input type="text" name="nombre_comprador" id="nombre_comprador" required>
+
+                <label for="correo">Correo Electrónico:</label>
+                <input type="email" name="correo" id="correo" required>
+
+                <label for="direccion">Dirección de Envío:</label>
+                <input type="text" name="direccion" id="direccion" required>
+
+                <button type="submit" class="confirm-btn">Confirmar Compra</button>
+            </form>
         </div>
-    <% } %>
-
-    <!-- Formulario para completar la compra -->
-    <form action="/comprar" method="POST">
-        <h2>Detalles de Envío</h2>
-
-        <label for="nombre_comprador">Tu Nombre:</label>
-        <input type="text" name="nombre_comprador" id="nombre_comprador" required>
-
-        <label for="correo">Correo Electrónico:</label>
-        <input type="email" name="correo" id="correo" required>
-
-        <label for="direccion">Dirección de Envío:</label>
-        <input type="text" name="direccion" id="direccion" required>
-
-        <button type="submit">Confirmar Compra</button>
-    </form>
+    </main>
 </body>
 </html>

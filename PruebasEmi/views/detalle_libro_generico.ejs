@@ -6,106 +6,99 @@
     <style>
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e6e6fa; /* Lavanda suave */
-            color: #2c3e50; /* Azul oscuro (buena legibilidad) */
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #004080, #5dade2);
+            color: #fff;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-
         .volver {
             position: absolute;
             top: 20px;
             left: 20px;
             text-decoration: none;
             padding: 10px 20px;
-            background-color: #95a5a6;
+            background-color: #5dade2;
             color: #fff;
             border-radius: 8px;
             font-weight: bold;
             transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
         }
-
         .volver:hover {
-            background-color: #7f8c8d;
+            background-color: #2e8bc0;
             transform: scale(1.05);
         }
-
         .card {
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            backdrop-filter: blur(8px);
-        }
-
-        .card img {
+            background-color: #fff;
+            color: #004080;
+            padding: 40px 40px 30px 40px;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            max-width: 500px;
             width: 100%;
-            max-height: 350px;
-            object-fit: cover;
-            border-radius: 15px;
-            margin-bottom: 20px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
         }
-
-        h1 {
-            margin-bottom: 10px;
-            font-size: 2.2em;
-            color: #4b0082; /* Índigo profundo para contraste */
+        .card h1 {
+            margin-bottom: 0;
+            font-size: 2em;
+            color: #004080;
+            text-align: center;
         }
-
         .info {
-            margin-bottom: 15px;
+            margin-bottom: 0;
             font-size: 1.1em;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
-
         .descripcion {
-            background-color: rgba(230, 230, 250, 0.4);
+            background-color: #eaf2fb;
+            color: #2c3e50;
             padding: 15px;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 0;
             text-align: justify;
             line-height: 1.6;
         }
-
         .botones {
             display: flex;
-            justify-content: space-around;
-            gap: 10px;
+            justify-content: center;
+            gap: 18px;
             flex-wrap: wrap;
+            margin-top: 10px;
         }
-
-        .botones a {
-            padding: 12px 25px;
+        .botones a, .botones form button {
+            padding: 12px 28px;
             border-radius: 8px;
             font-weight: bold;
             text-decoration: none;
             transition: background-color 0.3s, transform 0.2s;
             color: #fff;
+            font-size: 1em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            border: none;
+            cursor: pointer;
+            background-color: #5dade2;
         }
-
-        .comprar {
-            background-color: #1abc9c; /* Verde menta intenso */
+        .botones a.carrito {
+            background-color: #004080;
         }
-
-        .comprar:hover {
-            background-color: #16a085;
+        .botones a.carrito:hover {
+            background-color: #003366;
+        }
+        .botones a.comprar, .botones form button.comprar {
+            background-color: #5dade2;
+        }
+        .botones a.comprar:hover, .botones form button.comprar:hover {
+            background-color: #2e8bc0;
             transform: scale(1.05);
         }
-
-        .carrito {
-            background-color: #3498db; /* Azul claro */
-        }
-
-        .carrito:hover {
-            background-color: #2980b9;
-            transform: scale(1.05);
-        }
-
     </style>
 </head>
 <body>
@@ -113,19 +106,19 @@
     <a href="/menu_principal" class="volver">← Volver</a>
 
     <div class="card">
-        
         <h1><%= libro.nombre %></h1>
-
-        <p class="info"><strong>Autor:</strong> <%= libro.autor %></p>
-        <p class="info"><strong>Categoría:</strong> <%= libro.categoria %></p>
-
+        <div class="info">
+            <div><strong>Autor:</strong> <%= libro.autor %></div>
+            <div><strong>Categoría:</strong> <%= libro.categoria %></div>
+        </div>
         <div class="descripcion">
             <%= libro.descripcion %>
         </div>
-
         <div class="botones">
-            <a href="/comprar?id=<%= libro.id %>" class="comprar">Comprar</a>
-            <a href="/carrito_usua?agregar=<%= libro.id %>" class="carrito">Agregar al carrito</a>
+            <form action="/agregar-al-carrito" method="POST" style="display:inline;">
+                <input type="hidden" name="libro_id" value="<%= libro.id %>">
+                <button type="submit" class="carrito">Agregar al carrito</button>
+            </form>
         </div>
     </div>
 

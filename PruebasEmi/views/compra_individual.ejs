@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compra de Libro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #004080, #5dade2);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .compra-container {
+            background: #fff;
+            color: #004080;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            text-align: center;
+            min-width: 320px;
+        }
+        h1 {
+            color: #004080;
+            margin-bottom: 20px;
+        }
+        .info {
+            font-size: 1.2em;
+            margin-bottom: 18px;
+        }
+        .precio {
+            font-size: 2em;
+            color: #2e8bc0;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        .volver {
+            display: inline-block;
+            margin-top: 18px;
+            color: #004080;
+            text-decoration: underline;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="compra-container">
+        <h1>Compra de Libro</h1>
+        <div class="info">
+            <strong>Título:</strong> <%= libro.nombre %><br>
+            <strong>Autor:</strong> <%= libro.autor %>
+        </div>
+        <div class="precio">
+            Precio: $250 MXN
+        </div>
+        <a href="/menu_principal" class="volver">Volver al Menú Principal</a>
+    </div>
+</body>
+</html>
