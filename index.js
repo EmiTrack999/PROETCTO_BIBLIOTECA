@@ -23,17 +23,16 @@ app.use('/imagenes', express.static(path.join(__dirname, 'PruebasEmi', 'views', 
 
 // Configuración de la base de datos MySQL
 const conexion = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'biblioteca'
+    host: 'sql10.freesqldatabase.com',
+    user: 'sql10779321',
+    password: 'fp7yu6epLS',
+    database: 'sql10779321'
 });
-
 conexion.connect((error) => {
     if (error) {
         console.log("Error al conectar:", error);
     } else {
-        console.log('Conectado a la base de datos "biblioteca"');
+        console.log('Conectado a la base de datos "sql10779321"');
     }
 });
 
