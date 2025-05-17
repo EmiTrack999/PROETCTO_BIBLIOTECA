@@ -176,8 +176,22 @@ app.get("/ayuda", (req, res) => {
 });
 
 app.get("/contactanos", (req, res) => {
-    res.render("contactanos");
+    res.render("contactanos"); // Asegúrate de tener views/contactanos.ejs
 });
+
+// Ruta POST para procesar el formulario (solo redirecciona)
+app.post("/contactanos", (req, res) => {
+    // No se guarda nada en base de datos
+    res.redirect("/msj_re");
+});
+
+// Ruta GET para la vista de mensaje de respuesta
+app.get("/msj_re", (req, res) => {
+    res.render("msj_re"); // Asegúrate de tener views/msj_re.ejs
+});
+
+
+
 
 // --- CARRITO PROFESIONAL CON BASE DE DATOS ---
 
@@ -410,7 +424,7 @@ app.post("/enviar-ayuda", (req, res) => {
             return res.send("Error al guardar el mensaje.");
         }
 
-        res.redirect('/mensaje-recibido');  
+        res.redirect('/msj_re');  
     });
 });
 
