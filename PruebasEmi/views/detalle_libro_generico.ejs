@@ -119,7 +119,21 @@
                 <input type="hidden" name="libro_id" value="<%= libro.id %>">
                 <button type="submit" class="carrito">Agregar al carrito</button>
             </form>
+            <!-- Los botones de PDF solo se mostrarán si el usuario ya compró el libro -->
+            <% if (usuarioHaComprado) { %>
+                <% if (libro.archivo_pdf) { %>
+                    <a href="/imagenes/<%= libro.archivo_pdf %>" target="_blank" class="comprar">Ver libro (PDF)</a>
+                    <a href="/imagenes/<%= libro.archivo_pdf %>" download class="comprar">Descargar PDF</a>
+                <% } else { %>
+                    <p style="color:#c00;margin-top:15px;">Este libro aún no tiene PDF disponible.</p>
+                <% } %>
+            <% } %>
         </div>
+        <% if (usuarioHaComprado && libro.archivo_pdf) { %>
+        <div style="margin-top:20px;">
+            <iframe src="/imagenes/<%= libro.archivo_pdf %>" width="100%" height="500px" style="border-radius:12px; border:2px solid #5dade2;"></iframe>
+        </div>
+        <% } %>
     </div>
 
 </body>

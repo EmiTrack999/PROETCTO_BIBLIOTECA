@@ -73,6 +73,12 @@
         <form action="/carrito_usua?agregar=<%= libro.id %>" method="get">
             <button type="submit" class="btn-comprar">Agregar al Carrito</button>
         </form>
+        <% if (libro.archivo_pdf) { %>
+            <a href="/imagenes/<%= libro.archivo_pdf %>" target="_blank" class="btn-comprar" style="display:inline-block;margin-top:15px;">Ver libro en PDF</a>
+            <a href="/imagenes/<%= libro.archivo_pdf %>" download class="btn-comprar" style="display:inline-block;margin-top:15px;">Descargar PDF</a>
+        <% } else { %>
+            <p style="color:#c00;margin-top:15px;">Este libro aún no tiene PDF disponible.</p>
+        <% } %>
         <a href="/menu_principal" class="volver">Volver al Menú Principal</a>
     </div>
 </body>

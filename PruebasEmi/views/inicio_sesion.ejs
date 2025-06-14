@@ -71,6 +71,26 @@
         .register-button:hover {
             background-color: #003366;
         }
+
+        .guest-button {
+            background-color: #f4f6f7;
+            color: #004080;
+            border: 1px solid #bfc9ca;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+            font-size: 0.95em;
+            opacity: 0.85;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .guest-button:hover {
+            background-color: #d6dbdf;
+            color: #2e4053;
+            opacity: 1;
+        }
     </style>
     
 </head>
@@ -105,6 +125,11 @@
         <!-- Botón que redirige a la página de registro -->
         <form action="/registrar" method="GET">
             <button class="register-button" type="submit">Registrar cuenta</button>
+        </form>
+
+        <!-- Botón para omitir sesión (entrar como invitado) -->
+        <form action="/invitado" method="GET">
+            <button class="guest-button" type="submit">Omitir sesión (Entrar como invitado)</button>
         </form>
     </div>
 </body>

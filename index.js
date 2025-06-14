@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path');
 const mysql = require('mysql');
+const nodemailer = require('nodemailer');
+const fs = require('fs');
+const PDFDocument = require('pdfkit');
 
 // Iniciando la aplicación de Express
 const app = express();
@@ -23,16 +26,16 @@ app.use('/imagenes', express.static(path.join(__dirname, 'PruebasEmi', 'views', 
 
 // Configuración de la base de datos MySQL
 const conexion = mysql.createConnection({
-    host: 'sql10.freesqldatabase.com',
-    user: 'sql10779321',
-    password: 'fp7yu6epLS',
-    database: 'sql10779321'
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'biblioteca'
 });
 conexion.connect((error) => {
     if (error) {
         console.log("Error al conectar:", error);
     } else {
-        console.log('Conectado a la base de datos "sql10779321"');
+        console.log('Conectado a la base de datos "biblioteca"');
     }
 });
 
@@ -130,12 +133,20 @@ app.post("/login", (req, res) => {
     });
 });
 
+// Ruta para omitir sesión e ingresar como invitado
+app.get('/invitado', (req, res) => {
+    req.session.usuario = null;
+    req.session.invitado = true;
+    res.redirect('/menu_principal');
+});
+
 // RUTAS PARA EL MENÚ PRINCIPAL
 
 // Página principal de menú con libros
 app.get("/menu_principal", (req, res) => {
     const mensaje = req.query.mensaje || '';
     const busqueda = req.query.q;
+    const esInvitado = req.session.invitado === true;
 
     let sql = 'SELECT * FROM libros_admi';
     let valores = [];
@@ -151,7 +162,7 @@ app.get("/menu_principal", (req, res) => {
             return res.send("Error al consultar los libros.");
         }
 
-        res.render("menu_principal", { mensaje, libros: results, q: busqueda });
+        res.render("menu_principal", { mensaje, libros: results, q: busqueda, esInvitado });
     });
 });
 
@@ -173,10 +184,6 @@ app.get("/categorias", (req, res) => {
 
 app.get("/ayuda", (req, res) => {
     res.render("ayuda");
-});
-
-app.get("/contactanos", (req, res) => {
-    res.render("contactanos"); // Asegúrate de tener views/contactanos.ejs
 });
 
 // Ruta POST para procesar el formulario (solo redirecciona)
@@ -299,11 +306,52 @@ app.post('/comprar', (req, res) => {
         return res.status(400).send("Faltan datos para completar la compra.");
     }
     const usuario = req.session.usuario;
-    // Limpiar el carrito después de la compra
-    const sql = 'DELETE FROM pedidos WHERE usuario = ?';
-    conexion.query(sql, [usuario], (err) => {
-        if (err) return res.send('Error al finalizar la compra.');
-        res.render('agradecimiento', { nombre_comprador, correo });
+
+    // Buscar el libro comprado (puedes ajustar esto si es más de uno)
+    const sqlLibro = 'SELECT l.* FROM pedidos p JOIN libros_admi l ON p.libro_id = l.id WHERE p.usuario = ? LIMIT 1';
+    conexion.query(sqlLibro, [usuario], (err, results) => {
+        if (err || results.length === 0) {
+            return res.send('Error al obtener el libro para enviar.');
+        }
+        const libro = results[0];
+        // Usar el campo archivo_pdf para la ruta del PDF
+        let pdfPath = null;
+        let pdfExists = false;
+        if (libro.archivo_pdf) {
+            pdfPath = path.join(__dirname, 'PruebasEmi', 'views', 'imagenes', libro.archivo_pdf);
+            try {
+                pdfExists = fs.existsSync(pdfPath);
+            } catch (e) { pdfExists = false; }
+        }
+
+        // Configurar el transporte de nodemailer (puedes usar Gmail u otro servicio)
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'TUCORREO@gmail.com', // Cambia por tu correo
+                pass: 'TUPASSWORD' // Cambia por tu contraseña o app password
+            }
+        });
+
+        // Opciones del correo
+        const mailOptions = {
+            from: 'TUCORREO@gmail.com',
+            to: correo,
+            subject: `Tu libro: ${libro.nombre}`,
+            text: `¡Gracias por tu compra! Adjuntamos el libro "${libro.nombre}" en PDF.`,
+            attachments: pdfExists ? [{ filename: libro.archivo_pdf, path: pdfPath }] : []
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            // Limpiar el carrito después de la compra
+            const sql = 'DELETE FROM pedidos WHERE usuario = ?';
+            conexion.query(sql, [usuario], (err2) => {
+                if (err2) return res.send('Error al finalizar la compra.');
+                // Link de descarga si existe el PDF
+                const linkDescarga = pdfExists ? `/imagenes/${libro.archivo_pdf}` : null;
+                res.render('descarga_libro', { linkDescarga });
+            });
+        });
     });
 });
 
@@ -346,17 +394,33 @@ app.get('/guardar_libro', (req, res) => {
 
 // Guardar libro en la base de datos
 app.post("/guardar-libro", (req, res) => {
-    const { id, nombre, autor, categoria, descripcion } = req.body;
-
-    const sql = "INSERT INTO libros_admi (id, nombre, autor, categoria,descripcion) VALUES (?, ?, ?, ?, ?)";
-    conexion.query(sql, [id, nombre, autor, categoria,descripcion], (err, resultado) => {
-        if (err) {
-            console.error("Error al guardar el libro:", err);
-            return res.send("Error al guardar el libro.");
-        }
-
-        console.log("Libro guardado con éxito");
-        res.redirect("/administracion");
+    const { id, nombre, autor, categoria, descripcion, contenido } = req.body;
+    // Generar el PDF automáticamente
+    const nombreArchivo = `${nombre.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+    const pdfPath = path.join(__dirname, 'PruebasEmi', 'views', 'imagenes', nombreArchivo);
+    const doc = new PDFDocument();
+    const stream = fs.createWriteStream(pdfPath);
+    doc.pipe(stream);
+    doc.fontSize(18).text(nombre, { align: 'center' });
+    doc.moveDown();
+    doc.fontSize(14).text(`Autor: ${autor}`);
+    doc.fontSize(12).text(`Categoría: ${categoria}`);
+    doc.moveDown();
+    doc.fontSize(12).text(descripcion);
+    doc.moveDown();
+    doc.fontSize(12).text(contenido);
+    doc.end();
+    stream.on('finish', () => {
+        // Guardar en la base de datos incluyendo el nombre del PDF
+        const sql = "INSERT INTO libros_admi (id, nombre, autor, categoria, descripcion, archivo_pdf, contenido) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        conexion.query(sql, [id, nombre, autor, categoria, descripcion, nombreArchivo, contenido], (err, resultado) => {
+            if (err) {
+                console.error("Error al guardar el libro:", err);
+                return res.send("Error al guardar el libro.");
+            }
+            console.log("Libro guardado con éxito");
+            res.redirect("/administracion");
+        });
     });
 });
 
@@ -457,27 +521,89 @@ app.get('/ayuda_admin', (req, res) => {
     });
 });
 
+// CRUD Libros
+app.get('/crud_libros', (req, res) => {
+    const sql = 'SELECT * FROM libros_admi';
+    conexion.query(sql, (err, libros) => {
+        if (err) {
+            console.error('Error al obtener los libros:', err);
+            return res.render('crud_libros', { libros: [] });
+        }
+        res.render('crud_libros', { libros });
+    });
+});
+
+// CRUD Usuarios
+app.get('/crud_usuarios', (req, res) => {
+    const sql = 'SELECT * FROM usuarios';
+    conexion.query(sql, (err, usuarios) => {
+        if (err) {
+            console.error('Error al obtener los usuarios:', err);
+            return res.render('crud_usuarios', { usuarios: [] });
+        }
+        res.render('crud_usuarios', { usuarios });
+    });
+});
+
+// Eliminar usuario por correo (usuario)
+app.post('/eliminar_usuario/:usuario', (req, res) => {
+    const usuario = req.params.usuario;
+    const sql = 'DELETE FROM usuarios WHERE usuario = ?';
+    conexion.query(sql, [usuario], (err) => {
+        if (err) {
+            console.error('Error al eliminar usuario:', err);
+            return res.redirect('/crud_usuarios?error=1');
+        }
+        res.redirect('/crud_usuarios');
+    });
+});
+
+// CRUD Administradores (ejemplo: usuarios con campo especial o tabla admins)
+app.get('/crud_admis', (req, res) => {
+    // Suponiendo que los administradores están en la tabla 'usuarios' con un campo 'esAdmin' = 1
+    const sql = 'SELECT * FROM usuarios WHERE esAdmin = 1';
+    conexion.query(sql, (err, admis) => {
+        if (err) {
+            console.error('Error al obtener los administradores:', err);
+            return res.render('crud_admis', { admis: [] });
+        }
+        res.render('crud_admis', { admis });
+    });
+});
 
 //consulta libro por id
 app.get('/libro/:id', (req, res) => {
     const id = req.params.id;
+    const usuario = req.session.usuario;
     const sql = 'SELECT * FROM libros_admi WHERE id = ?';
     conexion.query(sql, [id], (err, resultados) => {
         if (err) return res.send("Error al obtener el libro.");
         if (resultados.length === 0) return res.status(404).send("Libro no encontrado");
 
         const libro = resultados[0];
-
-        let vista = 'detalle_libro_generico';
-        switch (libro.nombre.toLowerCase()) {
-            case '¿Amar o depender?':
-                
-                vista = 'detalleslibro';
-                break;
-            
+        let usuarioHaComprado = false;
+        if (usuario) {
+            // Verificar si el usuario ya compró este libro
+            const sqlCompra = 'SELECT * FROM pedidos WHERE usuario = ? AND libro_id = ?';
+            conexion.query(sqlCompra, [usuario, id], (err2, res2) => {
+                if (!err2 && res2.length > 0) usuarioHaComprado = true;
+                let vista = 'detalle_libro_generico';
+                switch (libro.nombre.toLowerCase()) {
+                    case '¿amar o depender?':
+                        vista = 'detalleslibro';
+                        break;
+                }
+                res.render(vista, { libro, usuarioHaComprado });
+            });
+        } else {
+            let vista = 'detalle_libro_generico';
+            switch (libro.nombre.toLowerCase()) {
+                case '¿amar o depender?':
+                    vista = 'detalleslibro';
+                    break;
+            }
+            res.render(vista, { libro, usuarioHaComprado });
         }
-
-        res.render(vista, { libro });
     });
 });
 
@@ -490,6 +616,73 @@ app.get("/ver_precios", (req, res) => {
             return res.send("Error al consultar los libros.");
         }
         res.render("ver_precios", { libros });
+    });
+});
+
+// ASOCIACIÓN AUTOMÁTICA DE PDFS A LIBROS (EJECUTAR SOLO UNA VEZ O CUANDO AGREGUES NUEVOS PDFS)
+app.get('/asociar-pdfs', (req, res) => {
+    const pdfDir = path.join(__dirname, 'PruebasEmi', 'views', 'imagenes');
+    fs.readdir(pdfDir, (err, files) => {
+        if (err) return res.send('Error al leer la carpeta de PDFs');
+        // Solo archivos PDF
+        const pdfs = files.filter(f => f.toLowerCase().endsWith('.pdf'));
+        conexion.query('SELECT id, nombre FROM libros_admi', (err, libros) => {
+            if (err) return res.send('Error al leer libros de la base de datos');
+            let actualizados = 0;
+            libros.forEach(libro => {
+                // Buscar PDF que contenga el nombre del libro (ignorando mayúsculas/minúsculas y espacios)
+                const nombreNormalizado = libro.nombre.replace(/\s+/g, '').toLowerCase();
+                const pdfMatch = pdfs.find(pdf => pdf.replace(/\s+/g, '').toLowerCase().includes(nombreNormalizado));
+                if (pdfMatch) {
+                    conexion.query('UPDATE libros_admi SET archivo_pdf = ? WHERE id = ?', [pdfMatch, libro.id], (err2) => {
+                        if (!err2) actualizados++;
+                    });
+                }
+            });
+            setTimeout(() => {
+                res.send(`Asociación automática terminada. PDFs asociados: ${actualizados}`);
+            }, 1000);
+        });
+    });
+});
+
+// AGREGAR AUTOMÁTICAMENTE LOS PDFs COMO LIBROS EN LA BASE DE DATOS
+app.get('/agregar-pdfs-a-bd', (req, res) => {
+    const pdfDir = path.join(__dirname, 'PruebasEmi', 'views', 'imagenes');
+    fs.readdir(pdfDir, (err, files) => {
+        if (err) return res.send('Error al leer la carpeta de PDFs');
+        // Solo archivos PDF
+        const pdfs = files.filter(f => f.toLowerCase().endsWith('.pdf'));
+        let agregados = 0;
+        let procesados = 0;
+        if (pdfs.length === 0) return res.send('No se encontraron archivos PDF para agregar.');
+        pdfs.forEach(pdf => {
+            // Usar el nombre del archivo (sin extensión) como nombre del libro
+            const nombreLibro = pdf.replace(/\.pdf$/i, '');
+            // Verificar si ya existe un libro con ese archivo_pdf
+            conexion.query('SELECT * FROM libros_admi WHERE archivo_pdf = ?', [pdf], (err, results) => {
+                if (err) { procesados++; if (procesados === pdfs.length) res.send(`Libros agregados automáticamente: ${agregados}`); return; }
+                if (results.length === 0) {
+                    // Insertar libro básico
+                    conexion.query(
+                        "INSERT INTO libros_admi (nombre, autor, categoria, descripcion, archivo_pdf, contenido) VALUES (?, ?, ?, ?, ?, ?)",
+                        [nombreLibro, 'Desconocido', 'Sin categoría', 'Libro importado automáticamente.', pdf, ''],
+                        (err2) => {
+                            if (!err2) agregados++;
+                            procesados++;
+                            if (procesados === pdfs.length) {
+                                res.send(`Libros agregados automáticamente: ${agregados}`);
+                            }
+                        }
+                    );
+                } else {
+                    procesados++;
+                    if (procesados === pdfs.length) {
+                        res.send(`Libros agregados automáticamente: ${agregados}`);
+                    }
+                }
+            });
+        });
     });
 });
 

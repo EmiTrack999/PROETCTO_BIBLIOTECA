@@ -96,6 +96,13 @@
 <body>
     <h1>Guardar Libro</h1>
 
+    <!-- Botones de acceso rápido a los CRUD principales -->
+    <div class="button-container">
+        <a href="/crud_libros">CRUD LIBROS</a>
+        <a href="/crud_usuarios">CRUD USUARIOS</a>
+        <a href="/crud_admis">CRUD ADMINS</a>
+    </div>
+
     <form action="/guardar-libro" method="POST">
         <label for="id">ID del Libro:</label>
         <input type="text" name="id" id="id" required>
