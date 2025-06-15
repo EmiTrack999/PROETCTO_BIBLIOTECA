@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>¡Gracias por tu compra!</title>
+    <link rel="stylesheet" href="/books.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.18);
+            padding: 48px 36px 36px 36px;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            color: #2e8bc0;
+            font-size: 2.3em;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+        .success-icon {
+            font-size: 3.5em;
+            color: #2ecc71;
+            margin-bottom: 18px;
+        }
+        .descarga {
+            margin-top: 30px;
+        }
+        .descarga a {
+            display: inline-block;
+            background: linear-gradient(90deg, #2e8bc0 0%, #145da0 100%);
+            color: #fff;
+            padding: 14px 36px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.15em;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.10);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .descarga a:hover {
+            background: linear-gradient(90deg, #145da0 0%, #2e8bc0 100%);
+            transform: scale(1.04);
+        }
+        .pdf-viewer {
+            margin: 40px auto 0 auto;
+            width: 100%;
+            max-width: 520px;
+            min-height: 480px;
+            border: 2px solid #2e8bc0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #b2bec3;
+            background: #f8fafc;
+        }
+        .footer {
+            margin-top: 38px;
+            color: #888;
+            font-size: 0.98em;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 24px 8px; }
+            .pdf-viewer { min-height: 320px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✔️</div>
+        <h1>¡Gracias por tu compra!</h1>
+        <p style="font-size:1.15em; color:#333;">Tu libro está listo para descargar y visualizar.</p>
+        <% if (linkDescarga) { %>
+            <div class="descarga">
+                <a href="<%= linkDescarga %>" download>Descargar mi libro en PDF</a>
+            </div>
+            <div class="pdf-viewer">
+                <iframe src="<%= linkDescarga %>" width="100%" height="480px" style="border:none;"></iframe>
+            </div>
+        <% } else { %>
+            <p style="color: #e53935; font-weight: bold;">No se encontró el archivo PDF del libro. Si tienes problemas, contáctanos.</p>
+        <% } %>
+        <div class="footer">
+            <p>¿Tienes dudas o problemas? <a href="/ayuda" style="color:#2e8bc0;text-decoration:underline;">Contáctanos aquí</a></p>
+        </div>
+    </div>
+</body>
+</html>

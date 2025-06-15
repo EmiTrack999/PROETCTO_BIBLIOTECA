@@ -22,6 +22,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Servir las imágenes de forma correcta
 app.use('/imagenes', express.static(path.join(__dirname, 'PruebasEmi', 'views', 'imagenes')));
+// Servir los PDF de forma correcta
+app.use('/pdfs', express.static(path.join(__dirname, 'PruebasEmi', 'views', 'PDFS')));
 
 
 // Configuración de la base de datos MySQL
@@ -318,10 +320,16 @@ app.post('/comprar', (req, res) => {
         let pdfPath = null;
         let pdfExists = false;
         if (libro.archivo_pdf) {
-            pdfPath = path.join(__dirname, 'PruebasEmi', 'views', 'imagenes', libro.archivo_pdf);
-            try {
-                pdfExists = fs.existsSync(pdfPath);
-            } catch (e) { pdfExists = false; }
+            // Buscar en PDFS primero, luego en imagenes
+            let pdfPathPDFS = path.join(__dirname, 'PruebasEmi', 'views', 'PDFS', libro.archivo_pdf);
+            let pdfPathIMG = path.join(__dirname, 'PruebasEmi', 'views', 'imagenes', libro.archivo_pdf);
+            if (fs.existsSync(pdfPathPDFS)) {
+                pdfPath = pdfPathPDFS;
+                pdfExists = true;
+            } else if (fs.existsSync(pdfPathIMG)) {
+                pdfPath = pdfPathIMG;
+                pdfExists = true;
+            }
         }
 
         // Configurar el transporte de nodemailer (puedes usar Gmail u otro servicio)
@@ -348,7 +356,15 @@ app.post('/comprar', (req, res) => {
             conexion.query(sql, [usuario], (err2) => {
                 if (err2) return res.send('Error al finalizar la compra.');
                 // Link de descarga si existe el PDF
-                const linkDescarga = pdfExists ? `/imagenes/${libro.archivo_pdf}` : null;
+                let linkDescarga = null;
+                if (pdfExists) {
+                    // Usar la ruta /pdfs/ para los PDFS
+                    if (pdfPath && pdfPath.includes('PDFS')) {
+                        linkDescarga = `/pdfs/${libro.archivo_pdf}`;
+                    } else {
+                        linkDescarga = `/imagenes/${libro.archivo_pdf}`;
+                    }
+                }
                 res.render('descarga_libro', { linkDescarga });
             });
         });
@@ -621,7 +637,8 @@ app.get("/ver_precios", (req, res) => {
 
 // ASOCIACIÓN AUTOMÁTICA DE PDFS A LIBROS (EJECUTAR SOLO UNA VEZ O CUANDO AGREGUES NUEVOS PDFS)
 app.get('/asociar-pdfs', (req, res) => {
-    const pdfDir = path.join(__dirname, 'PruebasEmi', 'views', 'imagenes');
+    // Cambiado a la carpeta PDFS
+    const pdfDir = path.join(__dirname, 'PruebasEmi', 'views', 'PDFS');
     fs.readdir(pdfDir, (err, files) => {
         if (err) return res.send('Error al leer la carpeta de PDFs');
         // Solo archivos PDF
@@ -648,7 +665,8 @@ app.get('/asociar-pdfs', (req, res) => {
 
 // AGREGAR AUTOMÁTICAMENTE LOS PDFs COMO LIBROS EN LA BASE DE DATOS
 app.get('/agregar-pdfs-a-bd', (req, res) => {
-    const pdfDir = path.join(__dirname, 'PruebasEmi', 'views', 'imagenes');
+    // Cambiado a la carpeta PDFS
+    const pdfDir = path.join(__dirname, 'PruebasEmi', 'views', 'PDFS');
     fs.readdir(pdfDir, (err, files) => {
         if (err) return res.send('Error al leer la carpeta de PDFs');
         // Solo archivos PDF
