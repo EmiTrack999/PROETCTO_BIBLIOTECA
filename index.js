@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const nodemailer = require('nodemailer');
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
@@ -30,7 +30,7 @@ app.use('/pdfs', express.static(path.join(__dirname, 'PruebasEmi', 'views', 'PDF
 const conexion = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password:'',
     database: 'biblioteca'
 });
 conexion.connect((error) => {
@@ -409,36 +409,19 @@ app.get('/guardar_libro', (req, res) => {
 });
 
 // Guardar libro en la base de datos
-app.post("/guardar-libro", (req, res) => {
-    const { id, nombre, autor, categoria, descripcion, contenido } = req.body;
-    // Generar el PDF automáticamente
-    const nombreArchivo = `${nombre.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
-    const pdfPath = path.join(__dirname, 'PruebasEmi', 'views', 'imagenes', nombreArchivo);
-    const doc = new PDFDocument();
-    const stream = fs.createWriteStream(pdfPath);
-    doc.pipe(stream);
-    doc.fontSize(18).text(nombre, { align: 'center' });
-    doc.moveDown();
-    doc.fontSize(14).text(`Autor: ${autor}`);
-    doc.fontSize(12).text(`Categoría: ${categoria}`);
-    doc.moveDown();
-    doc.fontSize(12).text(descripcion);
-    doc.moveDown();
-    doc.fontSize(12).text(contenido);
-    doc.end();
-    stream.on('finish', () => {
-        // Guardar en la base de datos incluyendo el nombre del PDF
-        const sql = "INSERT INTO libros_admi (id, nombre, autor, categoria, descripcion, archivo_pdf, contenido) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        conexion.query(sql, [id, nombre, autor, categoria, descripcion, nombreArchivo, contenido], (err, resultado) => {
-            if (err) {
-                console.error("Error al guardar el libro:", err);
-                return res.send("Error al guardar el libro.");
-            }
-            console.log("Libro guardado con éxito");
-            res.redirect("/administracion");
-        });
+app.post('/guardar-libro', (req, res) => {
+    const { id, nombre, autor, categoria, descripcion } = req.body;
+
+    const sql = "INSERT INTO libros_admi (id, nombre, autor, categoria, descripcion) VALUES (?, ?, ?, ?, ?)";
+    conexion.query(sql, [id, nombre, autor, categoria, descripcion], (err, resultado) => {
+        if (err) {
+            console.error("Error al guardar el libro:", err);
+            return res.send("Error al guardar el libro.");
+        }
+        res.redirect('/administracion');
     });
 });
+
 
 // Página de compra de libros
 app.get('/comprar', (req, res) => {
