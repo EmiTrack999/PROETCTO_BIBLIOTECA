@@ -28,16 +28,16 @@ app.use('/pdfs', express.static(path.join(__dirname, 'PruebasEmi', 'views', 'PDF
 
 // Configuración de la base de datos MySQL
 const conexion = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password:'',
-    database: 'biblioteca'
+    host: 'sql5.freesqldatabase.com',
+    user: 'sql5786448',
+    password: 'HdC6yZhCJ3',
+    database: 'sql5786448'
 });
 conexion.connect((error) => {
     if (error) {
         console.log("Error al conectar:", error);
     } else {
-        console.log('Conectado a la base de datos "biblioteca"');
+        console.log('Conectado a la base de datos "sql5786448"');
     }
 });
 
